@@ -10,7 +10,8 @@ async function loadMemorialsData() {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        memorialsData = data;
+        // TinaCMS wraps the array in a "memorials" property
+        memorialsData = data.memorials || data;
         return memorialsData;
     } catch (error) {
         console.error('Error loading memorials data:', error);

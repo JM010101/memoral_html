@@ -1,0 +1,17 @@
+{
+  "name": "memorial-website",
+  "version": "1.0.0",
+  "description": "A simple memorial website with TinaCMS",
+  "scripts": {
+    "dev": "tinacms dev -c \"npx http-server -p 8080\"",
+    "build": "tinacms build",
+    "start": "npx http-server -p 8080"
+  },
+  "dependencies": {
+    "tinacms": "^1.6.0",
+    "@tinacms/cli": "^1.6.0"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
