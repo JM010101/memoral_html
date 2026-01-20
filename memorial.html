@@ -8,8 +8,9 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <header>
-        <nav class="navbar">
+        <nav class="navbar" role="navigation" aria-label="Main navigation">
             <div class="nav-container">
                 <a href="index.html" class="logo">In Memory</a>
                 <ul class="nav-menu">
@@ -20,7 +21,7 @@
         </nav>
     </header>
 
-    <main>
+    <main id="main-content">
         <div id="memorialContent" class="memorial-page">
             <!-- Memorial content will be loaded here by JavaScript -->
             <div class="loading">Loading...</div>
@@ -34,12 +35,12 @@
     </footer>
 
     <!-- Lightbox for photo gallery -->
-    <div id="lightbox" class="lightbox" style="display: none;">
+    <div id="lightbox" class="lightbox" style="display: none;" role="dialog" aria-modal="true" aria-label="Image gallery lightbox" aria-hidden="true">
         <button class="lightbox-close" aria-label="Close lightbox">&times;</button>
         <button class="lightbox-prev" aria-label="Previous image">&#8249;</button>
         <button class="lightbox-next" aria-label="Next image">&#8250;</button>
-        <img id="lightboxImage" src="" alt="">
-        <div class="lightbox-caption"></div>
+        <img id="lightboxImage" src="" alt="Gallery image">
+        <div class="lightbox-caption" role="status" aria-live="polite"></div>
     </div>
 
     <script src="script.js"></script>

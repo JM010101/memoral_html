@@ -8,8 +8,9 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <header>
-        <nav class="navbar">
+        <nav class="navbar" role="navigation" aria-label="Main navigation">
             <div class="nav-container">
                 <a href="index.html" class="logo">In Memory</a>
                 <ul class="nav-menu">
@@ -20,8 +21,8 @@
         </nav>
     </header>
 
-    <main>
-        <section class="hero" style="background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1920&h=1080&q=85');">
+    <main id="main-content">
+        <section class="hero hero-home" aria-label="Welcome banner">
             <div class="hero-overlay"></div>
             <div class="hero-content">
                 <h1>In Loving Memory</h1>

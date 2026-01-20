@@ -6,27 +6,52 @@ let memorialsData = [];
 async function loadMemorialsData() {
     try {
         const response = await fetch('data/memorials.json');
-        memorialsData = await response.json();
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        memorialsData = data;
         return memorialsData;
     } catch (error) {
         console.error('Error loading memorials data:', error);
+        showErrorMessage('Unable to load memorial data. Please try refreshing the page.');
         return [];
     }
 }
 
+// Show error message to user
+function showErrorMessage(message) {
+    const containers = [
+        document.getElementById('featuredMemorials'),
+        document.getElementById('memorialsContainer'),
+        document.getElementById('memorialContent')
+    ];
+    
+    containers.forEach(container => {
+        if (container) {
+            container.innerHTML = `<div class="error-message" role="alert"><p>${message}</p></div>`;
+        }
+    });
+}
+
 // Initialize page based on current location
 document.addEventListener('DOMContentLoaded', async () => {
-    await loadMemorialsData();
+    try {
+        await loadMemorialsData();
 
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
 
-    if (currentPage === 'index.html' || currentPage === '') {
-        loadFeaturedMemorials();
-    } else if (currentPage === 'memorials.html') {
-        loadAllMemorials();
-        setupSearch();
-    } else if (currentPage === 'memorial.html') {
-        loadMemorialPage();
+        if (currentPage === 'index.html' || currentPage === '') {
+            loadFeaturedMemorials();
+        } else if (currentPage === 'memorials.html') {
+            loadAllMemorials();
+            setupSearch();
+        } else if (currentPage === 'memorial.html') {
+            loadMemorialPage();
+        }
+    } catch (error) {
+        console.error('Error initializing page:', error);
+        showErrorMessage('An error occurred while loading the page.');
     }
 });
 
@@ -39,7 +64,7 @@ function loadFeaturedMemorials() {
     container.innerHTML = '';
 
     if (featured.length === 0) {
-        container.innerHTML = '<p style="text-align: center; color: #666;">No memorials available yet.</p>';
+        container.innerHTML = '<p class="no-memorials-message">No memorials available yet.</p>';
         return;
     }
 
@@ -87,9 +112,7 @@ function createMemorialCard(memorial) {
     const dates = document.createElement('p');
     if (memorial.birthDate || memorial.deathDate) {
         dates.textContent = formatDates(memorial.birthDate, memorial.deathDate);
-        dates.style.color = '#7f8c8d';
-        dates.style.fontSize = '0.9rem';
-        dates.style.marginBottom = '0.5rem';
+        dates.className = 'memorial-card-dates';
     }
 
     const excerpt = document.createElement('p');
@@ -104,11 +127,15 @@ function createMemorialCard(memorial) {
     // Only add image if photos exist
     if (memorial.photos && memorial.photos.length > 0) {
         const image = document.createElement('img');
-        image.src = memorial.photos[0];
-        image.alt = `${memorial.name} memorial photo`;
+        const photo = memorial.photos[0];
+        image.src = typeof photo === 'string' ? photo : photo.url;
+        image.alt = typeof photo === 'string' ? `${memorial.name} memorial photo` : photo.alt;
         image.className = 'memorial-card-image';
+        image.loading = 'lazy';
+        image.decoding = 'async';
         image.onerror = function() {
             this.style.display = 'none';
+            console.warn(`Failed to load image: ${this.src}`);
         };
         card.appendChild(image);
     }
@@ -184,8 +211,10 @@ function loadMemorialPage() {
         html += '<div class="gallery-grid">';
         
         memorial.photos.forEach((photo, index) => {
+            const photoUrl = typeof photo === 'string' ? photo : photo.url;
+            const photoAlt = typeof photo === 'string' ? `Photo ${index + 1} of ${escapeHtml(memorial.name)}` : escapeHtml(photo.alt);
             html += `<div class="gallery-item" data-index="${index}">`;
-            html += `<img src="${escapeHtml(photo)}" alt="Photo ${index + 1} of ${escapeHtml(memorial.name)}">`;
+            html += `<img src="${escapeHtml(photoUrl)}" alt="${photoAlt}" loading="lazy" decoding="async">`;
             html += '</div>';
         });
         
@@ -193,7 +222,7 @@ function loadMemorialPage() {
         html += '</div>';
     }
 
-    html += '<div style="text-align: center; margin-top: 2rem;">';
+    html += '<div class="back-button-container">';
     html += '<a href="memorials.html" class="btn">← Back to All Memorials</a>';
     html += '</div>';
     html += '</div>'; // Close memorial-page-content
@@ -225,16 +254,20 @@ function setupPhotoGallery(photos) {
         });
     });
 
-    function openLightbox(photoSrc, current, total) {
-        lightboxImage.src = photoSrc;
-        lightboxImage.alt = `Photo ${current} of ${total}`;
-        lightboxCaption.textContent = `Photo ${current} of ${total}`;
+    function openLightbox(photo, current, total) {
+        const photoUrl = typeof photo === 'string' ? photo : photo.url;
+        const photoAlt = typeof photo === 'string' ? `Photo ${current} of ${total}` : photo.alt;
+        lightboxImage.src = photoUrl;
+        lightboxImage.alt = photoAlt;
+        lightboxCaption.textContent = photoAlt;
         lightbox.style.display = 'flex';
+        lightbox.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
     }
 
     function closeLightbox() {
         lightbox.style.display = 'none';
+        lightbox.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
     }
 

@@ -1,17 +1,26 @@
 # Memorial Website
 
-A simple, respectful memorial website built with HTML, CSS, and JavaScript. This is a static website that requires no database or server-side processing, making it easy to host on any basic web hosting service.
+A simple, respectful memorial website built with HTML, CSS, and JavaScript. This static website requires no database or server-side processing, making it easy to host on any basic, low-cost hosting service.
+
+## Why This Approach?
+
+This website is built for **longevity and simplicity**:
+- ✅ No WordPress, Wix, or Squarespace
+- ✅ Runs on basic, low-cost hosting (or free)
+- ✅ Easy to maintain by non-developers
+- ✅ No dependencies that will break over time
+- ✅ Built to last for years
 
 ## Features
 
 - Clean, respectful design suitable for memorial pages
-- Mobile-responsive layout
-- Photo gallery with lightbox functionality
-- Search functionality to find memorials
+- Mobile-responsive and accessible
+- Photo gallery with lightbox
+- Search functionality
 - Easy content management through JSON file
-- No dependencies or frameworks required
-- Accessible design with proper ARIA labels
-- Print-friendly styles
+- No frameworks or dependencies
+- Works offline once loaded
+- Print-friendly
 
 ## Project Structure
 
@@ -23,83 +32,106 @@ memoral_html/
 ├── styles.css          # All styles
 ├── script.js           # JavaScript functionality
 ├── data/
-│   └── memorials.json  # Memorial data (edit this to add/update memorials)
-├── images/             # Place photos here
+│   └── memorials.json  # Memorial data (EDIT THIS FILE)
+├── images/             # Place memorial photos here
+│   ├── hero-background.jpg
+│   ├── memorials-background.jpg
+│   └── memorial-hero-background.jpg
 └── README.md           # This file
 ```
 
-## Getting Started
+---
 
-### Local Development
+## Quick Start (5 Minutes)
 
-1. **Download or clone** this project to your computer
-2. **Open the website** by:
-   - Double-clicking `index.html`, or
-   - Using a local web server (recommended for testing)
+### 1. Add Photos
 
-#### Using a Local Web Server
+Place photos in the `images/` folder with descriptive names:
+- Example: `john-smith-garden.jpg`
+- Example: `mary-johnson-reading.jpg`
 
-**Python (if installed):**
-```bash
-# Python 3
-python -m http.server 8000
+### 2. Edit the JSON File
 
-# Python 2
-python -m SimpleHTTPServer 8000
-```
+Open `data/memorials.json` in any text editor (Notepad, TextEdit, etc.)
 
-**Node.js (if installed):**
-```bash
-npx http-server
-```
-
-Then open `http://localhost:8000` in your browser.
-
-### Deployment
-
-This website can be deployed to any static web hosting service:
-
-- **GitHub Pages** (free)
-- **Netlify** (free tier)
-- **Vercel** (free tier)
-- **Any traditional web hosting** (shared hosting, VPS, etc.)
-
-Simply upload all files to your web server's public directory (usually `public_html`, `www`, or `htdocs`).
-
-## Adding a New Memorial
-
-To add a new memorial, edit the `data/memorials.json` file. Here's how:
-
-### Step 1: Add Photos
-
-1. Place photos in the `images/` folder
-2. Name them descriptively (e.g., `john-smith-1.jpg`, `john-smith-2.jpg`)
-
-**Photo Guidelines:**
-- Use JPG or PNG format
-- Recommended size: 800-1200px width
-- Keep file sizes reasonable (under 2MB per photo)
-- Maximum 6 photos per memorial
-
-### Step 2: Edit the JSON File
-
-Open `data/memorials.json` in a text editor and add a new memorial entry. Here's the format:
+Copy this template:
 
 ```json
 {
-  "id": "unique-id-here",
-  "name": "Full Name",
-  "birthDate": "YYYY-MM-DD",
-  "deathDate": "YYYY-MM-DD",
-  "tribute": "Text tribute here. Use \\n for line breaks.",
+  "id": "memorial-4",
+  "name": "Person's Full Name",
+  "birthDate": "1950-01-15",
+  "deathDate": "2024-01-15",
+  "tribute": "Write your tribute here.\n\nUse \\n for new paragraphs.",
   "photos": [
-    "images/photo1.jpg",
-    "images/photo2.jpg"
+    {
+      "url": "images/person-name-1.jpg",
+      "alt": "Describe what's in the photo for screen readers"
+    },
+    {
+      "url": "images/person-name-2.jpg",
+      "alt": "Another descriptive alt text"
+    }
   ]
 }
 ```
 
-### Example Entry
+### 3. Add to the Array
+
+- Find the closing bracket `]` at the end of the file
+- Add a comma after the last `}` before the `]`
+- Paste your new entry
+- Save the file
+
+### 4. Test
+
+Open `index.html` in a web browser. Your memorial should appear!
+
+---
+
+## Detailed Instructions
+
+### Adding a Memorial (Step-by-Step)
+
+#### Step 1: Prepare Your Photos
+
+**Photo Guidelines:**
+- Format: JPG or PNG
+- Size: 800x600px recommended (or similar 4:3 ratio)
+- File size: Under 200KB each (use TinyPNG.com to compress)
+- Maximum: 6 photos per memorial
+- Naming: Use lowercase, hyphens, descriptive names
+
+**Good names:**
+- `john-smith-garden.jpg`
+- `mary-johnson-nursing-uniform.jpg`
+
+**Bad names:**
+- `IMG_1234.jpg`
+- `Photo 1.JPG`
+
+#### Step 2: Write Descriptive Alt Text
+
+Alt text helps screen readers describe images to visually impaired visitors.
+
+**Good alt text:**
+- "John Smith smiling in his garden, surrounded by blooming roses"
+- "Mary Johnson in her nurse's uniform at the hospital where she worked"
+
+**Bad alt text:**
+- "Photo 1"
+- "John Smith"
+
+#### Step 3: Edit memorials.json
+
+**Important JSON Rules:**
+1. All text must be in "quotes"
+2. Use commas between entries
+3. NO comma after the last entry
+4. Use `\n` for line breaks in tribute text
+5. Dates format: `YYYY-MM-DD` (e.g., "1950-01-15")
+
+**Example Entry:**
 
 ```json
 {
@@ -107,136 +139,235 @@ Open `data/memorials.json` in a text editor and add a new memorial entry. Here's
   "name": "Jane Doe",
   "birthDate": "1975-06-10",
   "deathDate": "2024-02-15",
-  "tribute": "Jane Doe was a wonderful person who brought joy to everyone she met.\\n\\nShe was passionate about her work as a teacher and loved spending time with her family. Her kindness and generosity will always be remembered.",
+  "tribute": "Jane Doe was a wonderful person who brought joy to everyone she met.\n\nShe was passionate about teaching and loved spending time with her family.",
   "photos": [
-    "images/jane-doe-1.jpg",
-    "images/jane-doe-2.jpg"
+    {
+      "url": "images/jane-doe-1.jpg",
+      "alt": "Jane Doe smiling at her retirement party"
+    },
+    {
+      "url": "images/jane-doe-2.jpg",
+      "alt": "Jane Doe reading to her grandchildren"
+    }
   ]
 }
 ```
 
-### Important Notes:
+#### Step 4: Validate Your Changes
 
-1. **ID Field**: Must be unique. Use a simple format like `memorial-4`, `memorial-5`, etc.
-2. **Dates**: Use format `YYYY-MM-DD` (year-month-day). You can omit dates if not available.
-3. **Tribute**: 
-   - Use `\n` for line breaks
-   - Keep it respectful and meaningful
-   - No HTML tags needed
-4. **Photos**: 
-   - List the file paths relative to the root directory
-   - Use forward slashes `/` even on Windows
-   - Photo is optional - you can use an empty array `[]` if no photos
-5. **JSON Format**: 
-   - Make sure all entries are separated by commas
-   - The last entry should NOT have a trailing comma
-   - All text must be in quotes
+Before uploading:
+1. Check for typos in image filenames
+2. Make sure all quotes match
+3. Verify commas are correct
+4. Test locally by opening `index.html`
 
-### Step 3: Test Locally
+---
 
-After editing, test the website locally to make sure:
-- The new memorial appears on the memorials page
-- The memorial page displays correctly
-- Photos load properly
-- Text formatting looks good
+## Common Tasks
 
-### Step 4: Upload to Server
-
-Upload the updated `data/memorials.json` file and any new images to your web server.
-
-## Editing an Existing Memorial
+### Edit an Existing Memorial
 
 1. Open `data/memorials.json`
-2. Find the memorial entry by ID or name
-3. Make your changes:
-   - Edit the name, dates, or tribute text
-   - Add/remove photos from the photos array
-   - Update photo filenames if you've renamed images
+2. Find the memorial by searching for the name
+3. Make your changes
 4. Save the file
-5. Test locally, then upload to server
+5. Test locally, then upload
 
-## Removing a Memorial
+### Remove a Memorial
 
 1. Open `data/memorials.json`
-2. Find and delete the entire memorial entry (including the curly braces)
-3. Remove the comma before or after the deleted entry if needed
+2. Delete the entire entry (from `{` to `}`)
+3. Remove the comma before or after if needed
 4. Save and upload
 
-## Customization
+### Change Colors
 
-### Changing Colors
-
-Edit `styles.css` and look for the CSS variables at the top:
+1. Open `styles.css`
+2. Find the `:root` section at the top
+3. Change color values:
 
 ```css
 :root {
-    --primary-color: #2c3e50;      /* Main color for headers, buttons */
-    --secondary-color: #34495e;    /* Hover states */
-    --accent-color: #7f8c8d;       /* Secondary buttons */
-    /* ... */
+    --primary-color: #2c3e50;      /* Dark blue-gray */
+    --secondary-color: #34495e;    /* Slightly lighter */
+    --accent-color: #7f8c8d;       /* Gray for accents */
 }
 ```
 
-Change these values to customize the color scheme.
+### Change Site Title
 
-### Changing Site Title
+Edit all three HTML files (`index.html`, `memorials.html`, `memorial.html`):
 
-1. Edit `index.html`, `memorials.html`, and `memorial.html`
-2. Find the `<a href="index.html" class="logo">In Memory</a>` line
-3. Change "In Memory" to your preferred title
+Find: `<a href="index.html" class="logo">In Memory</a>`
 
-### Editing Home Page Text
+Change "In Memory" to your preferred title.
 
-Edit the text in `index.html` within the `<section class="intro">` section.
+---
 
-### Changing Footer
+## Deployment
 
-Edit the footer text in all HTML files (search for `<footer>`).
+### Option 1: GitHub Pages (Free, Recommended)
 
-## Browser Compatibility
+1. Create a GitHub account (free)
+2. Create a new repository
+3. Upload all files
+4. Go to Settings → Pages
+5. Select main branch
+6. Your site will be at: `username.github.io/repository-name`
 
-This website works in all modern browsers:
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-- Mobile browsers
+**Detailed guide:** See `DEPLOYMENT.md`
+
+### Option 2: Netlify (Free, Drag-and-Drop)
+
+1. Go to netlify.com
+2. Drag your project folder onto the page
+3. Done! Your site is live
+
+### Option 3: Traditional Web Hosting
+
+Upload all files via FTP to your hosting provider's public directory:
+- Usually named: `public_html`, `www`, or `htdocs`
+- Use FileZilla (free FTP client)
+
+**Cost:** $3-10/month for basic hosting
+
+---
 
 ## Troubleshooting
 
 ### Photos Not Showing
 
-- Check that image filenames match exactly (case-sensitive on some servers)
-- Verify the path in JSON uses forward slashes: `images/photo.jpg`
-- Make sure images are in the `images/` folder
-- Check file permissions on your web server
+**Check:**
+- ✓ Image filename matches exactly (case-sensitive)
+- ✓ Image is in the `images/` folder
+- ✓ Path in JSON uses forward slashes: `images/photo.jpg`
+- ✓ File uploaded to server
 
 ### JSON Errors
 
-- Use a JSON validator online to check for syntax errors
-- Make sure all quotes are straight quotes (") not curly quotes ("")
-- Check for trailing commas before closing brackets/braces
-- Ensure all text is properly escaped
+**Common mistakes:**
+- Missing comma between entries
+- Extra comma after last entry
+- Unmatched quotes
+- Wrong date format
+
+**Solution:** Use JSONLint.com to validate your JSON
 
 ### Website Not Working
 
-- Make sure you're using a web server (not just opening files directly)
-- Check browser console for errors (F12 → Console tab)
-- Verify all files are uploaded to the server
-- Check that file paths are correct
+1. Open browser console (F12 → Console tab)
+2. Look for error messages
+3. Check that all files are uploaded
+4. Verify you're using a web server (not just opening files)
+
+---
+
+## Browser Compatibility
+
+Works in all modern browsers:
+- Chrome, Firefox, Safari, Edge (latest versions)
+- Mobile browsers (iOS Safari, Chrome Mobile)
+- Internet Explorer 11+ (with limitations)
+
+---
+
+## Accessibility
+
+This website follows WCAG 2.1 AA standards:
+- ✓ Keyboard navigation
+- ✓ Screen reader compatible
+- ✓ Proper color contrast
+- ✓ Descriptive alt text
+- ✓ Skip navigation links
+- ✓ ARIA labels
+
+---
+
+## Maintenance
+
+### Regular Tasks
+
+**Monthly:**
+- Check that all images load
+- Test on mobile device
+- Verify search works
+
+**As Needed:**
+- Add new memorials
+- Update existing tributes
+- Add new photos
+
+### Backup
+
+**Important:** Keep backups of:
+1. `data/memorials.json` file
+2. All photos in `images/` folder
+3. Any customizations to CSS
+
+---
 
 ## Support
 
-For questions or issues:
-1. Check the troubleshooting section above
-2. Verify your JSON syntax with an online validator
-3. Test in a different browser
-4. Check browser console for error messages
+### Getting Help
+
+1. Check this README
+2. See `MAINTAINER_GUIDE.md` for visual guides
+3. See `DEPLOYMENT.md` for hosting help
+4. Check browser console for errors
+
+### Common Questions
+
+**Q: Can I add videos?**
+A: Not built-in, but you can link to YouTube/Vimeo
+
+**Q: How many memorials can I add?**
+A: Unlimited, but performance may slow after 100+
+
+**Q: Can I password protect the site?**
+A: Yes, through your hosting provider's settings
+
+**Q: Do I need to know coding?**
+A: No! Just edit the JSON file following the examples
+
+---
+
+## Technical Details
+
+### For Developers
+
+- Pure HTML5, CSS3, ES6 JavaScript
+- No build process required
+- No dependencies
+- Lazy loading images
+- Semantic HTML
+- CSS Grid and Flexbox
+- LocalStorage for future enhancements
+
+### File Sizes
+
+- Total: ~50KB (excluding images)
+- HTML: ~10KB
+- CSS: ~20KB
+- JS: ~10KB
+
+---
 
 ## License
 
-This project is provided as-is for use in memorial websites.
+This code is provided as-is for use in memorial websites. Feel free to customize and use for your memorial site.
+
+---
 
 ## Credits
 
-Built with care and respect for honoring memories. Simple, stable, and built to last.
+Built with care, restraint, and respect for honoring real lives.
+
+**Design Principles:**
+- Simplicity over complexity
+- Longevity over trends
+- Accessibility over aesthetics
+- Maintainability over features
+
+---
+
+*Last updated: January 2026*

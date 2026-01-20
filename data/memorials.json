@@ -6,8 +6,14 @@
     "deathDate": "2023-12-10",
     "tribute": "John Smith was a beloved father, husband, and friend who touched the lives of everyone he met. He dedicated his life to helping others, working as a teacher for over 30 years. His kindness, humor, and wisdom will be remembered by all who knew him.\n\nJohn had a passion for gardening and spent countless hours in his garden, which he shared with neighbors and friends. He believed in the power of community and was always there to lend a helping hand.\n\nHe will be deeply missed, but his legacy lives on in the countless lives he influenced and the memories we hold dear.",
     "photos": [
-      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=800&h=600&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=600&fit=crop&q=80"
+      {
+        "url": "images/john-smith-1.jpg",
+        "alt": "John Smith smiling warmly in his garden, surrounded by blooming roses"
+      },
+      {
+        "url": "images/john-smith-2.jpg",
+        "alt": "John Smith at his retirement celebration with former students and colleagues"
+      }
     ]
   },
   {
@@ -17,8 +23,14 @@
     "deathDate": "2024-01-05",
     "tribute": "Mary Johnson was a remarkable woman who brought joy and light to everyone around her. As a nurse for 40 years, she cared for thousands of patients with compassion and dedication. Her warm smile and gentle spirit were her trademarks.\n\nOutside of work, Mary was an avid reader and loved sharing books with friends and family. She also enjoyed cooking and was known for her delicious pies that she would bring to every family gathering.\n\nMary's legacy of love and service continues to inspire those who were fortunate enough to know her.",
     "photos": [
-      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=800&h=600&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&h=600&fit=crop&q=80"
+      {
+        "url": "images/mary-johnson-1.jpg",
+        "alt": "Mary Johnson in her nurse's uniform, standing in the hospital where she worked for 40 years"
+      },
+      {
+        "url": "images/mary-johnson-2.jpg",
+        "alt": "Mary Johnson reading a book in her favorite armchair by the window"
+      }
     ]
   },
   {
@@ -28,9 +40,18 @@
     "deathDate": "2023-08-20",
     "tribute": "Robert Williams was a man of integrity, creativity, and boundless energy. As an architect, he designed beautiful buildings that will stand as testaments to his vision. But more importantly, he was a devoted family man who cherished time with his loved ones.\n\nRobert had a love for nature and spent many weekends hiking and camping with his family. He taught his children to appreciate the beauty of the natural world and to live life with purpose and joy.\n\nHis memory will forever be a source of strength and inspiration for his family and friends.",
     "photos": [
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=800&h=600&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=800&h=600&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=800&h=600&fit=crop&q=80"
+      {
+        "url": "images/robert-williams-1.jpg",
+        "alt": "Robert Williams standing proudly in front of one of the buildings he designed"
+      },
+      {
+        "url": "images/robert-williams-2.jpg",
+        "alt": "Robert Williams hiking with his family on a mountain trail, surrounded by pine trees"
+      },
+      {
+        "url": "images/robert-williams-3.jpg",
+        "alt": "Robert Williams working at his drafting table with architectural blueprints"
+      }
     ]
   }
 ]
