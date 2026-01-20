@@ -221,9 +221,14 @@
     <div id="loginSection" class="login-section">
         <h1>🔒 Memorial Admin</h1>
         <p>Enter password to manage memorials</p>
-        <input type="password" id="passwordInput" placeholder="Enter admin password">
+        <div style="margin-bottom: 1rem;">
+            <input type="password" id="passwordInput" placeholder="Enter admin password" onkeypress="if(event.key==='Enter') login()">
+        </div>
         <button onclick="login()">Login</button>
         <div id="loginMessage"></div>
+        <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+            <a href="index.html" style="color: var(--primary-color); text-decoration: none;">← Back to Home</a>
+        </div>
     </div>
 
     <div id="adminSection" style="display: none;">
@@ -231,7 +236,10 @@
             <header class="admin-header">
                 <h1>✨ Memorial Admin - Automatic Save!</h1>
                 <p>Add memorial → Click Save → DONE! (Auto-commits to GitHub)</p>
-                <button onclick="logout()" style="padding: 0.5rem 1rem; background: #dc2626; color: white; border: none; border-radius: 4px; cursor: pointer;">Logout</button>
+                <div style="display: flex; gap: 0.5rem; justify-content: center; margin-top: 1rem;">
+                    <a href="index.html" style="padding: 0.5rem 1rem; background: var(--primary-color); color: white; border: none; border-radius: 4px; text-decoration: none; display: inline-block;">🏠 Home</a>
+                    <button onclick="logout()" style="padding: 0.5rem 1rem; background: #dc2626; color: white; border: none; border-radius: 4px; cursor: pointer;">Logout</button>
+                </div>
             </header>
 
             <div id="messageContainer"></div>
