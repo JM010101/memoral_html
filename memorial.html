@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Memorial page">
+    <title>Memorial - Memorial Website</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <a href="index.html" class="logo">In Memory</a>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="memorials.html">Memorials</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div id="memorialContent" class="memorial-page">
+            <!-- Memorial content will be loaded here by JavaScript -->
+            <div class="loading">Loading...</div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Memorial Website. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Lightbox for photo gallery -->
+    <div id="lightbox" class="lightbox" style="display: none;">
+        <button class="lightbox-close" aria-label="Close lightbox">&times;</button>
+        <button class="lightbox-prev" aria-label="Previous image">&#8249;</button>
+        <button class="lightbox-next" aria-label="Next image">&#8250;</button>
+        <img id="lightboxImage" src="" alt="">
+        <div class="lightbox-caption"></div>
+    </div>
+
+    <script src="data/memorials.json" type="application/json" id="memorials-data"></script>
+    <script src="script.js"></script>
+</body>
+</html>
