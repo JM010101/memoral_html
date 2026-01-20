@@ -1,10 +1,6 @@
-# ✅ AUTOMATIC ADMIN - Users Just Click "Save"!
+# Quick Setup Guide
 
-**NO JSON downloads! NO GitHub knowledge needed! FULLY AUTOMATIC!**
-
----
-
-## 🎯 How It Works:
+## For Users:
 
 1. User goes to `/admin-auto.html`
 2. Enters password: `memorial2024`
