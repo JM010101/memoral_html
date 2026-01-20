@@ -78,16 +78,6 @@ function createMemorialCard(memorial) {
     card.className = 'memorial-card';
     card.setAttribute('aria-label', `View memorial for ${memorial.name}`);
 
-    const image = document.createElement('img');
-    image.src = memorial.photos && memorial.photos.length > 0 
-        ? memorial.photos[0] 
-        : 'images/placeholder.jpg';
-    image.alt = `${memorial.name} memorial photo`;
-    image.className = 'memorial-card-image';
-    image.onerror = function() {
-        this.style.display = 'none';
-    };
-
     const content = document.createElement('div');
     content.className = 'memorial-card-content';
 
@@ -111,7 +101,18 @@ function createMemorialCard(memorial) {
     if (dates.textContent) content.appendChild(dates);
     content.appendChild(excerpt);
 
-    card.appendChild(image);
+    // Only add image if photos exist
+    if (memorial.photos && memorial.photos.length > 0) {
+        const image = document.createElement('img');
+        image.src = memorial.photos[0];
+        image.alt = `${memorial.name} memorial photo`;
+        image.className = 'memorial-card-image';
+        image.onerror = function() {
+            this.style.display = 'none';
+        };
+        card.appendChild(image);
+    }
+
     card.appendChild(content);
 
     return card;

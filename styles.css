@@ -240,6 +240,10 @@ body {
 
 .memorial-card-content {
     padding: var(--spacing);
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .memorial-card h3 {
