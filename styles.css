@@ -327,11 +327,49 @@ body {
 
 /* Memorial Page */
 .memorial-page {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-light);
+    min-height: 60vh;
+}
+
+.memorial-hero-section {
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 4rem var(--spacing);
+    text-align: center;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.memorial-hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(44, 62, 80, 0.7);
+    z-index: 1;
+}
+
+.memorial-hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: var(--max-width);
+    margin: 0 auto;
+}
+
+.memorial-page-content {
     max-width: 900px;
     margin: 0 auto;
     padding: var(--spacing-lg) var(--spacing);
     background-color: var(--bg-white);
-    min-height: 60vh;
 }
 
 .memorial-header {

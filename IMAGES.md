@@ -6,18 +6,27 @@ This document lists all images used in the memorial website and their sources.
 
 All images are sourced from **Unsplash** (https://unsplash.com), a free stock photography platform that provides high-quality images for commercial and personal use.
 
-## Hero Section Background (Home Page)
+## Hero Section Backgrounds
 
+### Home Page Hero
 - **Image**: Peaceful memorial scene with candles
-- **URL**: `https://images.unsplash.com/photo-1518709268805-4e9042af2176`
+- **URL**: `https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=1920&h=1080&fit=crop&q=80`
 - **Usage**: Background for the hero section on the home page
+- **Description**: A respectful and peaceful image with memorial candles
 - **License**: Free to use (Unsplash License)
 
-## Memorials Page Header Background
-
-- **Image**: Serene nature scene
-- **URL**: `https://images.unsplash.com/photo-1506905925346-21bda4d32df4`
+### Memorials Page Header
+- **Image**: Serene nature landscape
+- **URL**: `https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=600&fit=crop&q=80`
 - **Usage**: Background for the "All Memorials" page header
+- **Description**: A calm, peaceful landscape suitable for a memorial listing page
+- **License**: Free to use (Unsplash License)
+
+### Individual Memorial Page Hero
+- **Image**: Peaceful memorial scene with candles
+- **URL**: `https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=1920&h=400&fit=crop&q=80`
+- **Usage**: Background for individual memorial page hero sections
+- **Description**: Same respectful theme as home page, creating visual consistency
 - **License**: Free to use (Unsplash License)
 
 ## Memorial Photos

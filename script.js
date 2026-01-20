@@ -154,13 +154,20 @@ function loadMemorialPage() {
     }
 
     // Build memorial page HTML
-    let html = '<div class="memorial-header">';
+    let html = '<section class="memorial-hero-section" style="background-image: url(\'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=1920&h=400&fit=crop&q=80\');">';
+    html += '<div class="memorial-hero-overlay"></div>';
+    html += '<div class="memorial-hero-content">';
     html += `<h1>${escapeHtml(memorial.name)}</h1>`;
     
     if (memorial.birthDate || memorial.deathDate) {
         html += `<div class="memorial-dates">${formatDates(memorial.birthDate, memorial.deathDate)}</div>`;
     }
     
+    html += '</div>';
+    html += '</section>';
+    
+    html += '<div class="memorial-page-content">';
+    html += '<div class="memorial-header">';
     html += '</div>';
 
     if (memorial.tribute) {
@@ -189,6 +196,7 @@ function loadMemorialPage() {
     html += '<div style="text-align: center; margin-top: 2rem;">';
     html += '<a href="memorials.html" class="btn">← Back to All Memorials</a>';
     html += '</div>';
+    html += '</div>'; // Close memorial-page-content
 
     container.innerHTML = html;
 
