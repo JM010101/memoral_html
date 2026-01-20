@@ -307,7 +307,7 @@
         const SUPABASE_KEY = 'sb_publishable_xhMPLBaobllfIXwm4Altw_WPMD30H9';
         const ADMIN_PASSWORD = 'memorial2024'; // Change this!
 
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let currentPhotos = [];
         let editingId = null;
@@ -338,7 +338,7 @@
         // Load memorials from database
         async function loadMemorials() {
             try {
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('memorials')
                     .select('*')
                     .order('created_at', { ascending: false });
@@ -448,13 +448,13 @@
                     
                     submitBtn.textContent = `Uploading photo ${i + 1}/${currentPhotos.length}...`;
                     
-                    const { data, error } = await supabase.storage
+                    const { data, error } = await supabaseClient.storage
                         .from('memorial-images')
                         .upload(fileName, photo.file);
 
                     if (error) throw error;
 
-                    const { data: { publicUrl } } = supabase.storage
+                    const { data: { publicUrl } } = supabaseClient.storage
                         .from('memorial-images')
                         .getPublicUrl(fileName);
 
@@ -477,7 +477,7 @@
                 };
 
                 if (editingId) {
-                    const { error } = await supabase
+                    const { error } = await supabaseClient
                         .from('memorials')
                         .update(memorialData)
                         .eq('id', editingId);
@@ -485,7 +485,7 @@
                     if (error) throw error;
                     showMessage('✅ Memorial updated successfully!', 'success');
                 } else {
-                    const { error } = await supabase
+                    const { error } = await supabaseClient
                         .from('memorials')
                         .insert([memorialData]);
 
@@ -508,7 +508,7 @@
         // Edit memorial
         async function editMemorial(id) {
             try {
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('memorials')
                     .select('*')
                     .eq('id', id)
@@ -542,7 +542,7 @@
             }
 
             try {
-                const { error } = await supabase
+                const { error } = await supabaseClient
                     .from('memorials')
                     .delete()
                     .eq('id', id);
