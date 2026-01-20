@@ -315,7 +315,9 @@
         async function loadMemorials() {
             try {
                 const response = await fetch('data/memorials.json');
-                memorialsData = await response.json();
+                const data = await response.json();
+                // Handle both formats: {memorials: [...]} or [...]
+                memorialsData = data.memorials || data;
                 displayMemorialsList();
                 generateNextId();
             } catch (error) {
@@ -500,7 +502,9 @@
         });
 
         function downloadJSON() {
-            const dataStr = JSON.stringify(memorialsData, null, 2);
+            // Wrap in memorials object for consistency with Netlify CMS format
+            const jsonData = { memorials: memorialsData };
+            const dataStr = JSON.stringify(jsonData, null, 2);
             const dataBlob = new Blob([dataStr], { type: 'application/json' });
             const url = URL.createObjectURL(dataBlob);
             const link = document.createElement('a');
