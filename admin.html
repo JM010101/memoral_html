@@ -611,15 +611,39 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function deleteMemorial(id) {
+        async function deleteMemorial(id) {
             if (!confirm('Are you sure you want to delete this memorial? This cannot be undone.')) {
                 return;
             }
 
-            memorialsData = memorialsData.filter(m => m.id !== id);
-            downloadJSON();
-            displayMemorialsList();
-            showMessage('Memorial deleted. Download the new memorials.json file.', 'success');
+            if (!adminPassword) {
+                showMessage('Please enter the admin password first', 'error');
+                document.getElementById('loginSection').style.display = 'block';
+                return;
+            }
+
+            try {
+                memorialsData = memorialsData.filter(m => m.id !== id);
+                
+                // Save to GitHub immediately
+                const response = await fetch('/api/save-memorial', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        password: adminPassword,
+                        memorials: memorialsData
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to delete');
+                }
+
+                displayMemorialsList();
+                showMessage('Memorial deleted successfully! Site will update in 1-2 minutes.', 'success');
+            } catch (error) {
+                showMessage('Error deleting memorial: ' + error.message, 'error');
+            }
         }
 
         function showMessage(message, type) {
