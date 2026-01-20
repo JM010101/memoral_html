@@ -5,7 +5,7 @@ import { defineConfig } from "tinacms";
 
 export default defineConfig({
   // Credentials from environment variables (for Vercel) or hardcoded (for local dev)
-  branch: "main", // Change to "master" if that's your default branch
+  branch: "master", // Your repository's default branch
   clientId: process.env.TINA_CLIENT_ID || "721c21c2-9751-4fca-a85f-a3acb547bbbf",
   token: process.env.TINA_TOKEN || "54a189ef24bd4e877e7fb91344b42d67893f246a",
 
