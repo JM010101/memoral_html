@@ -38,6 +38,19 @@
           "alt": "Robert Williams standing proudly in front of one of the buildings he designed"
         }
       ]
+    },
+    {
+      "id": "jack-black",
+      "name": "Jack Black",
+      "birthDate": "2026-01-08",
+      "deathDate": "2026-01-20",
+      "tribute": "hello",
+      "photos": [
+        {
+          "url": "images/jack-black-1768952139795-0.webp",
+          "alt": "Photo of Jack Black"
+        }
+      ]
     }
   ]
 }
