@@ -442,9 +442,26 @@
             currentPhotos[index].alt = value;
         }
 
-        // Form submission
+        let adminPassword = '';
+
+        function checkPassword() {
+            const password = document.getElementById('adminPassword').value;
+            if (password) {
+                adminPassword = password;
+                document.getElementById('loginSection').style.display = 'none';
+                showMessage('Logged in! You can now add/edit memorials.', 'success');
+            }
+        }
+
+        // Form submission with serverless backend
         document.getElementById('memorialForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            if (!adminPassword) {
+                showMessage('Please enter the admin password first', 'error');
+                document.getElementById('loginSection').style.display = 'block';
+                return;
+            }
             
             if (currentPhotos.length === 0) {
                 showMessage('Please add at least one photo', 'error');
@@ -453,67 +470,117 @@
 
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Saving...';
+            submitBtn.textContent = 'Uploading images and saving...';
 
             try {
-                // Save photos to images folder
+                // Upload photos to GitHub via serverless function
                 const photos = await Promise.all(currentPhotos.map(async (photo, index) => {
-                    const filename = `${document.getElementById('name').value.toLowerCase().replace(/\s+/g, '-')}-${index + 1}.${photo.file.name.split('.').pop()}`;
+                    const filename = `${document.getElementById('name').value.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}-${index + 1}.${photo.file.name.split('.').pop()}`;
                     
-                    // In a real implementation, you'd upload to server here
-                    // For now, we'll create the JSON structure
+                    // Convert file to base64
+                    const base64 = await new Promise((resolve) => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => resolve(reader.result);
+                        reader.readAsDataURL(photo.file);
+                    });
+
+                    // Upload to GitHub via serverless function
+                    const uploadResponse = await fetch('/api/upload-image', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            password: adminPassword,
+                            filename: filename,
+                            content: base64
+                        })
+                    });
+
+                    if (!uploadResponse.ok) {
+                        const error = await uploadResponse.json();
+                        throw new Error(error.error || 'Failed to upload image');
+                    }
+
+                    const uploadData = await uploadResponse.json();
+                    
                     return {
-                        url: `images/${filename}`,
+                        url: uploadData.url,
                         alt: photo.alt || `Photo of ${document.getElementById('name').value}`
                     };
                 }));
+
+                submitBtn.textContent = 'Saving memorial...';
 
                 const memorial = {
                     id: document.getElementById('memorialId').value,
                     name: document.getElementById('name').value,
                     birthDate: document.getElementById('birthDate').value,
                     deathDate: document.getElementById('deathDate').value,
-                    tribute: document.getElementById('tribute').value.replace(/\n\n/g, '\\n\\n'),
+                    tribute: document.getElementById('tribute').value,
                     photos: photos
                 };
 
                 if (editingId) {
                     const index = memorialsData.findIndex(m => m.id === editingId);
                     memorialsData[index] = memorial;
-                    showMessage('Memorial updated successfully!', 'success');
                 } else {
                     memorialsData.push(memorial);
-                    showMessage('Memorial added successfully!', 'success');
                 }
 
-                // Download updated JSON
-                downloadJSON();
+                // Save to GitHub via serverless function
+                const saveResponse = await fetch('/api/save-memorial', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        password: adminPassword,
+                        memorials: memorialsData
+                    })
+                });
+
+                if (!saveResponse.ok) {
+                    const error = await saveResponse.json();
+                    throw new Error(error.error || 'Failed to save memorial');
+                }
+
+                showMessage('Memorial saved successfully! Site will update in 1-2 minutes.', 'success');
                 
                 displayMemorialsList();
                 clearForm();
                 
             } catch (error) {
                 console.error('Error saving memorial:', error);
-                showMessage('Error saving memorial. Please try again.', 'error');
+                showMessage(`Error: ${error.message}. Please try again.`, 'error');
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.textContent = editingId ? 'Update Memorial' : 'Add Memorial';
             }
         });
 
-        function downloadJSON() {
-            // Wrap in memorials object for consistency with Netlify CMS format
-            const jsonData = { memorials: memorialsData };
-            const dataStr = JSON.stringify(jsonData, null, 2);
-            const dataBlob = new Blob([dataStr], { type: 'application/json' });
-            const url = URL.createObjectURL(dataBlob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'memorials.json';
-            link.click();
-            URL.revokeObjectURL(url);
-            
-            showMessage('Download the memorials.json file and replace it in the data/ folder', 'success');
+        async function downloadJSON() {
+            // Backup function - save to GitHub via API
+            if (!adminPassword) {
+                showMessage('Please enter the admin password first', 'error');
+                document.getElementById('loginSection').style.display = 'block';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/save-memorial', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        password: adminPassword,
+                        memorials: memorialsData
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to save');
+                }
+
+                showMessage('Memorials saved to GitHub! Site will update in 1-2 minutes.', 'success');
+            } catch (error) {
+                showMessage('Error saving memorials: ' + error.message, 'error');
+            }
         }
 
         function clearForm() {

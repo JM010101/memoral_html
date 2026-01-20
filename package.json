@@ -1,0 +1,8 @@
+{
+  "name": "memorial-website",
+  "version": "1.0.0",
+  "description": "Memorial website with serverless admin",
+  "dependencies": {
+    "@octokit/rest": "^19.0.13"
+  }
+}
