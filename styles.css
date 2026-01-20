@@ -72,15 +72,16 @@ body {
 
 /* Hero Section */
 .hero {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    background-color: var(--primary-color);
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: scroll;
     color: white;
     padding: 4rem var(--spacing);
     text-align: center;
     position: relative;
-    min-height: 400px;
+    min-height: 500px;
     display: flex;
     align-items: center;
     justify-content: center;
