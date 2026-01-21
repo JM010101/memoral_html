@@ -11,8 +11,8 @@
     --accent-color: #7f8c8d;
     --text-color: #333;
     --text-light: #666;
-    --bg-light: #f8f9fa;
-    --bg-white: #ffffff;
+    --bg-light: #ffffee;
+    --bg-white: #ffffee;
     --border-color: #e0e0e0;
     --spacing: 1rem;
     --spacing-lg: 2rem;
@@ -23,7 +23,7 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     line-height: 1.7;
     color: var(--text-color);
-    background-color: var(--bg-light);
+    background-color: #ffffee;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
