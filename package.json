@@ -1,8 +1,8 @@
 {
   "name": "memorial-website",
   "version": "1.0.0",
-  "description": "Memorial website with serverless admin",
+  "description": "Memorial website with Supabase backend",
   "dependencies": {
-    "@octokit/rest": "^19.0.13"
+    "@supabase/supabase-js": "^2.39.0"
   }
 }

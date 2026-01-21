@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memorial Admin - Supabase (Instant Updates)</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        .admin-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: #ffffee;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .admin-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            margin: -2rem -2rem 2rem -2rem;
+            background: #0313fc;
+            color: white;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .admin-header h1,
+        .admin-header p {
+            color: white;
+        }
+
+        .login-section {
+            max-width: 400px;
+            margin: 3rem auto;
+            padding: 2rem;
+            background: #ffffee;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+        
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+            background: #ffffee;
+        }
+        
+        .photo-upload {
+            border: 3px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .photo-upload:hover {
+            border-color: var(--primary-color);
+            background: rgba(3, 19, 252, 0.02);
+        }
+        
+        .photo-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .photo-item {
+            position: relative;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .photo-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+        
+        .photo-item button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: rgba(220, 38, 38, 0.9);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 0.25rem 0.5rem;
+            cursor: pointer;
+        }
+        
+        .photo-item input {
+            width: 100%;
+            padding: 0.5rem;
+            border: none;
+            border-top: 2px solid var(--border-color);
+            font-size: 0.875rem;
+        }
+        
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .memorial-list,
+        .comments-management {
+            margin-top: 3rem;
+        }
+        
+        .memorial-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .comment-item-admin {
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            background: #fff;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            border-left: 4px solid #f59e0b;
+        }
+
+        .btn-edit {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 0.5rem;
+        }
+        
+        .btn-delete {
+            background: #dc2626;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 0.5rem;
+        }
+
+        .btn-approve {
+            background: #10b981;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-reject {
+            background: #f59e0b;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 0.5rem;
+        }
+
+        .message {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #10b981;
+        }
+        
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #dc2626;
+        }
+
+        .instant-badge {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="loginSection" class="login-section">
+        <h1>🔒 Memorial Admin</h1>
+        <p>Supabase-powered instant updates!</p>
+        <div style="margin-bottom: 1rem;">
+            <input type="password" id="passwordInput" placeholder="Enter admin password" onkeypress="if(event.key==='Enter') login()">
+        </div>
+        <button onclick="login()" class="btn-primary">Login</button>
+        <div id="loginMessage"></div>
+        <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+            <a href="index.html" style="color: var(--primary-color); text-decoration: none;">← Back to Home</a>
+        </div>
+    </div>
+
+    <div id="adminSection" style="display: none;">
+        <div class="admin-container">
+            <header class="admin-header">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 0.5rem;">
+                    <img src="images/ChatGPT Image Jan 21, 2026, 07_49_29 AM.png" alt="Logo" style="width: 60px; height: 60px; filter: brightness(0) invert(1);">
+                    <div>
+                        <h1 style="margin: 0;">⚡ Memorial Admin - Supabase</h1>
+                        <span class="instant-badge">INSTANT UPDATES!</span>
+                    </div>
+                </div>
+                <p>Changes appear immediately - no waiting! 🚀</p>
+                <div style="display: flex; gap: 0.5rem; justify-content: center; margin-top: 1rem;">
+                    <a href="index.html" style="padding: 0.5rem 1rem; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); border-radius: 4px; text-decoration: none; display: inline-block;">🏠 Home</a>
+                    <button onclick="logout()" style="padding: 0.5rem 1rem; background: rgba(220, 38, 38, 0.8); color: white; border: none; border-radius: 4px; cursor: pointer;">Logout</button>
+                </div>
+            </header>
+
+            <div id="messageContainer"></div>
+
+            <form id="memorialForm">
+                <div class="form-group">
+                    <label for="memorialId">Memorial ID:</label>
+                    <input type="text" id="memorialId" placeholder="e.g., john-smith" required>
+                    <small style="color: var(--text-light);">Auto-generated from name</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="name">Full Name:</label>
+                    <input type="text" id="name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="birthDate">Birth Date:</label>
+                    <input type="date" id="birthDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="deathDate">Death Date:</label>
+                    <input type="date" id="deathDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="tribute">Memorial Tribute:</label>
+                    <textarea id="tribute" required placeholder="Write a heartfelt tribute..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Photos (up to 5):</label>
+                    <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
+                        <p>📷 Click to upload photos</p>
+                        <small>JPG, PNG, or AVIF • Max 5MB each</small>
+                    </div>
+                    <input type="file" id="photoInput" accept="image/*" multiple style="display: none;" onchange="handlePhotoUpload(event)">
+                    <div id="photoPreview" class="photo-preview"></div>
+                </div>
+
+                <button type="submit" class="btn-primary" id="submitBtn">⚡ Save Memorial (Instant!)</button>
+            </form>
+
+            <div class="memorial-list">
+                <h2>Existing Memorials</h2>
+                <div id="memorialsList">Loading...</div>
+            </div>
+
+            <div class="comments-management">
+                <h2>💬 Pending Comments</h2>
+                <div id="pendingCommentsList">Loading...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const ADMIN_PASSWORD = 'memorial2024';
+        const SUPABASE_URL = 'https://sexokiygxgvodfhjncbt.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_xhMPLBaoblIflXwm4Atltw_WPMD30H9';
+        
+        let supabase;
+        let currentPhotos = [];
+        let editingId = null;
+        let adminPassword = '';
+
+        // Initialize Supabase client
+        function initSupabase() {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+
+        initSupabase();
+
+        function login() {
+            const password = document.getElementById('passwordInput').value;
+            if (password === ADMIN_PASSWORD) {
+                adminPassword = password;
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('adminSection').style.display = 'block';
+                loadMemorials();
+                loadPendingComments();
+            } else {
+                document.getElementById('loginMessage').innerHTML = '<p style="color: #dc2626; margin-top: 1rem;">❌ Incorrect password</p>';
+            }
+        }
+
+        function logout() {
+            document.getElementById('adminSection').style.display = 'none';
+            document.getElementById('loginSection').style.display = 'block';
+            document.getElementById('passwordInput').value = '';
+            adminPassword = '';
+        }
+
+        async function loadMemorials() {
+            try {
+                const { data, error } = await supabase
+                    .from('memorials')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                displayMemorialsList(data || []);
+            } catch (error) {
+                console.error('Error loading memorials:', error);
+                showMessage('Error loading memorials', 'error');
+            }
+        }
+
+        function displayMemorialsList(memorials) {
+            const container = document.getElementById('memorialsList');
+            if (memorials.length === 0) {
+                container.innerHTML = '<p style="text-align: center; padding: 2rem; color: var(--text-light);">No memorials yet</p>';
+                return;
+            }
+
+            container.innerHTML = memorials.map(memorial => `
+                <div class="memorial-item">
+                    <div>
+                        <h3>${memorial.name}</h3>
+                        <p>${memorial.birth_date || '?'} - ${memorial.death_date || '?'}</p>
+                    </div>
+                    <div class="memorial-actions">
+                        <button class="btn-edit" onclick="editMemorial('${memorial.id}')">Edit</button>
+                        <button class="btn-delete" onclick="deleteMemorial('${memorial.id}')">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function handlePhotoUpload(event) {
+            const files = Array.from(event.target.files);
+            
+            if (currentPhotos.length + files.length > 5) {
+                showMessage('Maximum 5 photos allowed', 'error');
+                return;
+            }
+
+            files.forEach(file => {
+                if (file.size > 5 * 1024 * 1024) {
+                    showMessage('Image too large: ' + file.name, 'error');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    currentPhotos.push({
+                        file: file,
+                        preview: e.target.result,
+                        alt: ''
+                    });
+                    displayPhotos();
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function displayPhotos() {
+            const container = document.getElementById('photoPreview');
+            container.innerHTML = currentPhotos.map((photo, index) => `
+                <div class="photo-item">
+                    <img src="${photo.preview}" alt="Preview">
+                    <button type="button" onclick="removePhoto(${index})">×</button>
+                    <input type="text" placeholder="Photo description..." 
+                           value="${photo.alt}" 
+                           onchange="updateAltText(${index}, this.value)">
+                </div>
+            `).join('');
+        }
+
+        function removePhoto(index) {
+            currentPhotos.splice(index, 1);
+            displayPhotos();
+        }
+
+        function updateAltText(index, value) {
+            currentPhotos[index].alt = value;
+        }
+
+        document.getElementById('memorialForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (currentPhotos.length === 0) {
+                showMessage('Please add at least one photo', 'error');
+                return;
+            }
+
+            if (currentPhotos.length > 5) {
+                showMessage('Maximum 5 photos allowed', 'error');
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Uploading...';
+
+            try {
+                const uploadedPhotos = [];
+                
+                // Upload photos
+                for (let i = 0; i < currentPhotos.length; i++) {
+                    submitBtn.textContent = `⏳ Uploading photo ${i + 1}/${currentPhotos.length}...`;
+                    
+                    const response = await fetch('/api/supabase-upload-image', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            password: adminPassword,
+                            filename: `${document.getElementById('memorialId').value}-${Date.now()}-${i}.${currentPhotos[i].file.name.split('.').pop()}`,
+                            content: currentPhotos[i].preview
+                        })
+                    });
+
+                    if (!response.ok) throw new Error('Failed to upload image');
+                    
+                    const result = await response.json();
+                    uploadedPhotos.push({
+                        url: result.url,
+                        alt: currentPhotos[i].alt || `Photo of ${document.getElementById('name').value}`
+                    });
+                }
+
+                submitBtn.textContent = '⏳ Saving memorial...';
+
+                // Save memorial
+                const memorial = {
+                    id: document.getElementById('memorialId').value,
+                    name: document.getElementById('name').value,
+                    birthDate: document.getElementById('birthDate').value,
+                    deathDate: document.getElementById('deathDate').value,
+                    tribute: document.getElementById('tribute').value,
+                    photos: uploadedPhotos
+                };
+
+                const response = await fetch('/api/supabase-save-memorial', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        password: adminPassword,
+                        memorial: memorial
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showMessage('✅ Memorial saved instantly!', 'success');
+                    clearForm();
+                    loadMemorials();
+                } else {
+                    throw new Error(result.error || 'Failed to save memorial');
+                }
+
+            } catch (error) {
+                showMessage('❌ Error: ' + error.message, 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '⚡ Save Memorial (Instant!)';
+            }
+        });
+
+        async function deleteMemorial(id) {
+            if (!confirm('Are you sure you want to delete this memorial?')) return;
+
+            try {
+                const response = await fetch('/api/supabase-delete-memorial', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        password: adminPassword,
+                        memorialId: id
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showMessage('Memorial deleted!', 'success');
+                    loadMemorials();
+                } else {
+                    throw new Error(result.error);
+                }
+            } catch (error) {
+                showMessage('❌ Error: ' + error.message, 'error');
+            }
+        }
+
+        async function editMemorial(id) {
+            const { data, error } = await supabase
+                .from('memorials')
+                .select('*')
+                .eq('id', id)
+                .single();
+
+            if (error || !data) {
+                showMessage('Error loading memorial', 'error');
+                return;
+            }
+
+            editingId = id;
+            document.getElementById('memorialId').value = data.id;
+            document.getElementById('memorialId').disabled = true;
+            document.getElementById('name').value = data.name;
+            document.getElementById('birthDate').value = data.birth_date;
+            document.getElementById('deathDate').value = data.death_date;
+            document.getElementById('tribute').value = data.tribute;
+            
+            currentPhotos = [];
+            showMessage('Editing memorial. Re-upload photos.', 'success');
+            document.getElementById('submitBtn').textContent = '⚡ Update Memorial';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function clearForm() {
+            document.getElementById('memorialForm').reset();
+            document.getElementById('memorialId').disabled = false;
+            currentPhotos = [];
+            editingId = null;
+            displayPhotos();
+            document.getElementById('submitBtn').textContent = '⚡ Save Memorial (Instant!)';
+        }
+
+        async function loadPendingComments() {
+            try {
+                const { data, error } = await supabase
+                    .from('comments')
+                    .select('*')
+                    .eq('status', 'pending')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                displayPendingComments(data || []);
+            } catch (error) {
+                console.error('Error loading comments:', error);
+                document.getElementById('pendingCommentsList').innerHTML = '<p class="error">Failed to load comments</p>';
+            }
+        }
+
+        function displayPendingComments(comments) {
+            const container = document.getElementById('pendingCommentsList');
+            
+            if (comments.length === 0) {
+                container.innerHTML = '<p style="text-align: center; padding: 2rem; color: var(--text-light);">✅ No pending comments</p>';
+                return;
+            }
+
+            container.innerHTML = comments.map(comment => {
+                const date = new Date(comment.created_at);
+                const formattedDate = date.toLocaleString('en-US', { 
+                    year: 'numeric', 
+                    month: 'short', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                return `
+                    <div class="comment-item-admin">
+                        <div style="margin-bottom: 1rem;">
+                            <strong style="color: var(--primary-color);">${escapeHtml(comment.name)}</strong><br>
+                            <small>Memorial: ${comment.memorial_id} • ${formattedDate}</small>
+                            ${comment.email ? `<br><small>Email: ${escapeHtml(comment.email)}</small>` : ''}
+                        </div>
+                        <div style="padding: 1rem; background: #f9f9f9; border-radius: 4px; margin-bottom: 1rem; white-space: pre-wrap;">
+                            ${escapeHtml(comment.comment)}
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn-approve" onclick="manageComment('${comment.id}', 'approve')">✅ Approve</button>
+                            <button class="btn-reject" onclick="manageComment('${comment.id}', 'reject')">⚠️ Reject</button>
+                            <button class="btn-delete" onclick="manageComment('${comment.id}', 'delete')">🗑️ Delete</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function manageComment(commentId, action) {
+            if (!confirm(`Are you sure you want to ${action} this comment?`)) return;
+
+            try {
+                const response = await fetch('/api/supabase-manage-comments', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        commentId,
+                        action,
+                        password: adminPassword
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showMessage(`✅ Comment ${action}d instantly!`, 'success');
+                    loadPendingComments();
+                } else {
+                    throw new Error(result.error || 'Failed to manage comment');
+                }
+            } catch (error) {
+                console.error('Error managing comment:', error);
+                showMessage(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        function showMessage(message, type) {
+            const container = document.getElementById('messageContainer');
+            container.innerHTML = `<div class="message ${type}">${message}</div>`;
+            setTimeout(() => container.innerHTML = '', 5000);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        document.getElementById('name').addEventListener('input', (e) => {
+            if (!editingId) {
+                const id = e.target.value.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-');
+                document.getElementById('memorialId').value = id;
+            }
+        });
+    </script>
+</body>
+</html>
