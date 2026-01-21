@@ -18,8 +18,16 @@
         .admin-header {
             text-align: center;
             margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--border-color);
+            padding: 1.5rem;
+            margin: -2rem -2rem 2rem -2rem;
+            background: #425415;
+            color: white;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .admin-header h1,
+        .admin-header p {
+            color: white;
         }
 
         .login-section {
@@ -76,6 +84,7 @@
         .form-group textarea {
             min-height: 150px;
             resize: vertical;
+            background: #fffef8;
         }
         
         .photo-upload {
@@ -237,8 +246,8 @@
                 <h1>✨ Memorial Admin - Automatic Save!</h1>
                 <p>Add memorial → Click Save → DONE! (Auto-commits to GitHub)</p>
                 <div style="display: flex; gap: 0.5rem; justify-content: center; margin-top: 1rem;">
-                    <a href="index.html" style="padding: 0.5rem 1rem; background: var(--primary-color); color: white; border: none; border-radius: 4px; text-decoration: none; display: inline-block;">🏠 Home</a>
-                    <button onclick="logout()" style="padding: 0.5rem 1rem; background: #dc2626; color: white; border: none; border-radius: 4px; cursor: pointer;">Logout</button>
+                    <a href="index.html" style="padding: 0.5rem 1rem; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); border-radius: 4px; text-decoration: none; display: inline-block;">🏠 Home</a>
+                    <button onclick="logout()" style="padding: 0.5rem 1rem; background: rgba(220, 38, 38, 0.8); color: white; border: none; border-radius: 4px; cursor: pointer;">Logout</button>
                 </div>
             </header>
 
