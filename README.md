@@ -1,90 +1,165 @@
-# Memorial Website
+# 🐊 Fallen Gators Registry - Memorial Website
 
-A simple, beautiful memorial website where anyone can add and manage memorials.
-
----
-
-## 🚀 For Users (Add Memorial):
-
-### Go to Admin:
-**URL**: `https://your-site/admin-auto.html`  
-**Password**: `memorial2024`
-
-### Add Memorial:
-1. Enter name, dates, and tribute
-2. Upload photos (drag & drop)
-3. Click **"Save Memorial"**
-4. **Done!** Site updates in 2 minutes automatically
-
-**No technical knowledge needed!**
+A memorial website with instant database updates powered by Supabase.
 
 ---
 
-## ⚙️ Setup (One Time - 5 Minutes):
+## ✨ Features
 
-### Step 1: Create GitHub Token
-1. Go to: https://github.com/settings/tokens
-2. Click "Generate new token (classic)"
-3. Check: ✅ **repo** (full control)
-4. Generate and **copy the token**
-
-### Step 2: Add to Vercel
-1. Go to Vercel dashboard
-2. Your project → Settings → Environment Variables
-3. Add two variables:
-   - `GITHUB_TOKEN` = [your token]
-   - `ADMIN_PASSWORD` = `memorial2024`
-4. Save and redeploy
-
-### Done!
-Now anyone with the password can add memorials automatically!
+- 📝 **Memorial Management** - Add, edit, and delete memorials
+- 🖼️ **Photo Galleries** - Up to 5 photos per memorial with lightbox viewer
+- 💬 **Comment System** - Visitor comments with admin approval
+- 🔍 **Search** - Search memorials by name or tribute
+- 📱 **Responsive Design** - Works on all devices
+- ⚡ **Instant Updates** - Changes appear immediately (no waiting for deployments)
+- 🎨 **Professional Design** - Soft colors, clean layout
 
 ---
 
-## 📁 Files:
+## 🚀 Live Site
 
-### Website:
-- `index.html` - Home page
-- `memorials.html` - All memorials page  
-- `memorial.html` - Individual memorial page
-- `styles.css` - Styling
-- `script.js` - Functionality
+**Main Site:** Your Vercel URL  
+**Admin Panel:** `https://your-site.com/admin-supabase.html`
 
-### Admin:
-- `admin-auto.html` - Automatic admin panel
-- `api/save-memorial.js` - Saves to GitHub
-- `api/upload-image.js` - Uploads images
-
-### Data:
-- `data/memorials.json` - Memorial data
-- `images/` - Memorial photos
+**Admin Password:** `memorial2024` (change in Vercel environment variables)
 
 ---
 
-## 🔒 Security:
+## 📁 Project Structure
 
-- Password-protected admin
-- GitHub token stored securely in Vercel
-- All changes tracked in Git
+```
+memoral_html/
+├── index.html              # Home page
+├── memorials.html          # All memorials listing
+├── memorial.html           # Individual memorial page
+├── admin-supabase.html     # Admin panel
+├── script-supabase.js      # Frontend JavaScript
+├── styles.css              # All styling
+├── api/                    # Serverless functions (11 total)
+│   ├── get-memorials.js           # Public: Load memorials
+│   ├── get-comments.js            # Public: Load approved comments  
+│   ├── get-image.js               # Public: Proxy images
+│   ├── supabase-submit-comment.js # Public: Submit comments
+│   ├── admin-get-memorials.js     # Admin: Load memorials
+│   ├── admin-get-memorial.js      # Admin: Load single memorial
+│   ├── admin-get-pending-comments.js # Admin: Load pending comments
+│   ├── supabase-save-memorial.js  # Admin: Save memorial
+│   ├── supabase-upload-image.js   # Admin: Upload images
+│   ├── supabase-delete-memorial.js # Admin: Delete memorial
+│   └── supabase-manage-comments.js # Admin: Approve/reject comments
+├── images/                 # Uploaded memorial images
+├── package.json           # Dependencies
+└── supabase-setup.sql    # Database setup SQL
+```
 
 ---
 
-## ✅ Features:
+## 🛠️ Tech Stack
 
-- ✅ Add/edit/delete memorials
-- ✅ Upload multiple photos per memorial
-- ✅ Fully automatic (commits to GitHub)
-- ✅ Auto-deploys to Vercel
-- ✅ Mobile-friendly
-- ✅ Accessible
-- ✅ No technical knowledge needed
+- **Frontend:** HTML, CSS, JavaScript
+- **Backend:** Vercel Serverless Functions
+- **Database:** Supabase (PostgreSQL)
+- **Storage:** Supabase Storage
+- **Hosting:** Vercel
 
 ---
 
-## 📝 Change Password:
+## 📦 Setup (For New Deployment)
 
-Edit `ADMIN_PASSWORD` in Vercel environment variables and redeploy.
+### 1. Supabase Setup
+
+1. Create account at https://supabase.com
+2. Create new project
+3. Go to **SQL Editor** → Run `supabase-setup.sql`
+4. Go to **Storage** → Create bucket `memorial-images` (make public)
+5. Copy your API keys from **Settings** → **API**
+
+### 2. Vercel Setup
+
+1. Deploy to Vercel (connect GitHub repo)
+2. Add environment variables in **Settings** → **Environment Variables**:
+   ```
+   SUPABASE_URL = your_supabase_url
+   SUPABASE_SERVICE_KEY = your_service_key
+   SUPABASE_ANON_KEY = your_anon_key
+   ADMIN_PASSWORD = memorial2024
+   ```
+3. Redeploy
+
+### 3. Done!
+
+Visit your site and go to `/admin-supabase.html` to start adding memorials!
 
 ---
 
-**That's it! Simple and it works!** 🎉
+## 👨‍💼 Admin Usage
+
+### Add a Memorial
+
+1. Go to `admin-supabase.html`
+2. Login with password
+3. Fill in memorial details
+4. Upload 1-5 photos
+5. Click **Save Memorial**
+6. ✅ Appears instantly on homepage!
+
+### Approve Comments
+
+1. Go to admin panel
+2. Scroll to **Pending Comments** section
+3. Click ✅ **Approve** or ⚠️ **Reject**
+4. Approved comments show on memorial pages
+
+---
+
+## 🔧 Customization
+
+### Change Admin Password
+
+Update `ADMIN_PASSWORD` in Vercel environment variables, then redeploy.
+
+### Change Colors
+
+Edit `styles.css`:
+- `--primary-color: #0313fc` (blue top bar)
+- `--bg-light: #ffffee` (soft yellow background)
+
+### Change Site Name
+
+Search and replace "Fallen Gators Registry" in:
+- `index.html`
+- `memorials.html`
+- `memorial.html`
+- `admin-supabase.html`
+
+---
+
+## 🐛 Troubleshooting
+
+### Images Not Loading
+
+Images are proxied through Vercel due to Supabase connectivity. This is normal and handled automatically.
+
+### Comments Not Submitting
+
+Check Supabase RLS policies are set correctly (see `supabase-setup.sql`).
+
+### Admin Panel Not Loading
+
+Verify environment variables are set in Vercel and site has been redeployed.
+
+---
+
+## 📄 License
+
+All rights reserved.
+
+---
+
+## 🙏 Support
+
+For issues or questions, contact the site administrator.
+
+---
+
+**Built with ❤️ for remembering those we've lost.**
