@@ -3,18 +3,18 @@
 const SUPABASE_URL = 'https://sexokiygxgvodfhjncbt.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_xhMPLBaoblIflXwm4Atltw_WPMD30H9';
 
-let supabase;
+let supabaseClient;
 let memorialsData = [];
 
 // Initialize Supabase client
 function initSupabase() {
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 }
 
 // Load memorials data from Supabase
 async function loadMemorialsData() {
     try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
             .from('memorials')
             .select('*')
             .order('created_at', { ascending: false });
@@ -410,7 +410,7 @@ async function loadComments(memorialId) {
     if (!container) return;
 
     try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
             .from('comments')
             .select('*')
             .eq('memorial_id', memorialId)
