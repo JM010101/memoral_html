@@ -20,22 +20,24 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    line-height: 1.7;
-    color: var(--text-color);
+    font-family: 'Georgia', 'Times New Roman', serif;
+    line-height: 1.9;
+    color: #555;
     background-color: #ffffee;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    font-size: 16px;
+    font-size: 17px;
+    font-weight: 400;
 }
 
 /* Navigation */
 .navbar {
     background-color: #0313fc;
     color: white;
-    padding: 1rem 0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 1.2rem 0;
+    box-shadow: 0 3px 15px rgba(3,19,252,0.15);
+    border-radius: 0 0 20px 20px;
 }
 
 .nav-container {
@@ -310,9 +312,9 @@ body {
 }
 
 .memorial-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.12), 0 6px 12px rgba(0,0,0,0.08);
-    border-color: var(--accent-color);
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.10);
+    border-color: rgba(0,0,0,0.08);
 }
 
 .memorial-card-image {
@@ -636,6 +638,21 @@ input[type="text"],
 input[type="email"],
 input[type="search"] {
     background-color: #ffffee;
+    border: 2px solid rgba(0,0,0,0.08);
+    border-radius: 15px;
+    padding: 0.8rem 1rem;
+    font-family: 'Georgia', serif;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+textarea:focus,
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="search"]:focus {
+    border-color: #0313fc;
+    box-shadow: 0 0 0 3px rgba(3,19,252,0.1);
+    outline: none;
 }
 
 /* Utilities */
