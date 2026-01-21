@@ -154,16 +154,20 @@ function createMemorialCard(memorial) {
     if (memorial.photos && memorial.photos.length > 0) {
         const image = document.createElement('img');
         const photo = memorial.photos[0];
-        image.src = typeof photo === 'string' ? photo : photo.url;
-        image.alt = typeof photo === 'string' ? `${memorial.name} memorial photo` : photo.alt;
-        image.className = 'memorial-card-image';
-        image.loading = 'lazy';
-        image.decoding = 'async';
-        image.onerror = function() {
-            this.style.display = 'none';
-            console.warn(`Failed to load image: ${this.src}`);
-        };
-        card.appendChild(image);
+        const photoUrl = typeof photo === 'string' ? photo : photo.url;
+        
+        // Skip placeholder or invalid URLs
+        if (photoUrl && !photoUrl.includes('placeholder.com')) {
+            image.src = photoUrl;
+            image.alt = typeof photo === 'string' ? `${memorial.name} memorial photo` : photo.alt;
+            image.className = 'memorial-card-image';
+            image.loading = 'lazy';
+            image.decoding = 'async';
+            image.onerror = function() {
+                this.style.display = 'none';
+            };
+            card.appendChild(image);
+        }
     }
 
     card.appendChild(content);
@@ -231,20 +235,28 @@ function loadMemorialPage() {
     }
 
     if (memorial.photos && memorial.photos.length > 0) {
-        html += '<div class="photo-gallery">';
-        html += '<h2>Photo Gallery</h2>';
-        html += '<div class="gallery-grid">';
-        
-        memorial.photos.forEach((photo, index) => {
-            const photoUrl = typeof photo === 'string' ? photo : photo.url;
-            const photoAlt = typeof photo === 'string' ? `Photo ${index + 1} of ${escapeHtml(memorial.name)}` : escapeHtml(photo.alt);
-            html += `<div class="gallery-item" data-index="${index}">`;
-            html += `<img src="${escapeHtml(photoUrl)}" alt="${photoAlt}" loading="lazy" decoding="async">`;
-            html += '</div>';
+        // Filter out placeholder images
+        const validPhotos = memorial.photos.filter(photo => {
+            const url = typeof photo === 'string' ? photo : photo.url;
+            return url && !url.includes('placeholder.com');
         });
-        
-        html += '</div>';
-        html += '</div>';
+
+        if (validPhotos.length > 0) {
+            html += '<div class="photo-gallery">';
+            html += '<h2>Photo Gallery</h2>';
+            html += '<div class="gallery-grid">';
+            
+            validPhotos.forEach((photo, index) => {
+                const photoUrl = typeof photo === 'string' ? photo : photo.url;
+                const photoAlt = typeof photo === 'string' ? `Photo ${index + 1} of ${escapeHtml(memorial.name)}` : escapeHtml(photo.alt);
+                html += `<div class="gallery-item" data-index="${index}">`;
+                html += `<img src="${escapeHtml(photoUrl)}" alt="${photoAlt}" loading="lazy" decoding="async" onerror="this.parentElement.style.display='none'">`;
+                html += '</div>';
+            });
+            
+            html += '</div>';
+            html += '</div>';
+        }
     }
 
     // Comments section
