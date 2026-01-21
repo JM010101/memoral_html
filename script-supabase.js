@@ -11,15 +11,20 @@ function initSupabase() {
     supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 }
 
-// Load memorials data from Supabase
+// Load memorials data from API (proxied through Vercel)
 async function loadMemorialsData() {
     try {
-        const { data, error } = await supabaseClient
-            .from('memorials')
-            .select('*')
-            .order('created_at', { ascending: false });
+        const response = await fetch('/api/get-memorials');
+        if (!response.ok) {
+            throw new Error('Failed to fetch memorials');
+        }
 
-        if (error) throw error;
+        const result = await response.json();
+        if (!result.success) {
+            throw new Error(result.error || 'Failed to load memorials');
+        }
+
+        const data = result.memorials || [];
 
         // Transform data to match existing format
         memorialsData = data.map(memorial => ({
@@ -410,16 +415,17 @@ async function loadComments(memorialId) {
     if (!container) return;
 
     try {
-        const { data, error } = await supabaseClient
-            .from('comments')
-            .select('*')
-            .eq('memorial_id', memorialId)
-            .eq('status', 'approved')
-            .order('approved_at', { ascending: false });
+        const response = await fetch(`/api/get-comments?memorialId=${memorialId}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch comments');
+        }
 
-        if (error) throw error;
+        const result = await response.json();
+        if (!result.success) {
+            throw new Error(result.error || 'Failed to load comments');
+        }
 
-        const approvedComments = data || [];
+        const approvedComments = result.comments || [];
 
         if (approvedComments.length === 0) {
             container.innerHTML = '<p class="no-comments">No comments yet. Be the first to share your memories!</p>';
