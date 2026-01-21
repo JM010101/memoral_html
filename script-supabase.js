@@ -288,8 +288,8 @@ function loadMemorialPage() {
     html += '<input type="text" id="commenterName" required maxlength="100">';
     html += '</div>';
     html += '<div class="form-group">';
-    html += '<label for="commenterEmail">Email (optional, will not be displayed)</label>';
-    html += '<input type="email" id="commenterEmail" maxlength="100">';
+    html += '<label for="commenterEmail">Email *</label>';
+    html += '<input type="email" id="commenterEmail" required maxlength="100">';
     html += '</div>';
     html += '<div class="form-group">';
     html += '<label for="commentText">Comment *</label>';
