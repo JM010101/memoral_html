@@ -47,14 +47,13 @@ export default async function handler(req, res) {
             throw new Error(error.message);
         }
 
-        // Get public URL
-        const { data: { publicUrl } } = supabase.storage
-            .from('memorial-images')
-            .getPublicUrl(filename);
+        // Return proxied URL through Vercel instead of direct Supabase URL
+        // This fixes connectivity issues where browsers can't reach Supabase directly
+        const proxiedUrl = `/api/get-image?filename=${filename}`;
 
         return res.status(200).json({ 
             success: true,
-            url: publicUrl
+            url: proxiedUrl
         });
 
     } catch (error) {
