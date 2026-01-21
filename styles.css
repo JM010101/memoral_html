@@ -141,6 +141,7 @@ body {
     max-width: var(--max-width);
     margin: 0 auto;
     padding: 0 var(--spacing);
+    padding-bottom: 3rem;
 }
 
 /* Sections */
@@ -683,15 +684,19 @@ input[type="search"]:focus {
 
 /* Footer */
 footer {
-    margin-top: auto;
+    margin-top: 6rem;
     background-color: #0313fc;
     color: white;
-    padding: var(--spacing) var(--spacing);
+    padding: 2rem var(--spacing);
     text-align: center;
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -3px 15px rgba(3,19,252,0.15);
 }
 
 footer p {
     margin: 0;
+    font-size: 0.95rem;
+    opacity: 0.9;
 }
 
 /* Responsive Design */
