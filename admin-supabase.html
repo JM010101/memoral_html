@@ -282,6 +282,12 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="grade12Year">Grade 12 Graduating Year:</label>
+                    <input type="number" id="grade12Year" placeholder="e.g., 2020" min="1950" max="2050">
+                    <small style="color: var(--text-light);">Optional - for easier searching</small>
+                </div>
+
+                <div class="form-group">
                     <label for="tribute">Memorial Tribute:</label>
                     <textarea id="tribute" required placeholder="Write a heartfelt tribute..."></textarea>
                 </div>
@@ -567,6 +573,7 @@
                     name: document.getElementById('name').value,
                     birthDate: document.getElementById('birthDate').value,
                     deathDate: document.getElementById('deathDate').value,
+                    grade_12_year: document.getElementById('grade12Year').value ? parseInt(document.getElementById('grade12Year').value) : null,
                     tribute: document.getElementById('tribute').value,
                     photos: uploadedPhotos
                 };
@@ -644,6 +651,7 @@
             document.getElementById('name').value = data.name;
             document.getElementById('birthDate').value = data.birth_date;
             document.getElementById('deathDate').value = data.death_date;
+            document.getElementById('grade12Year').value = data.grade_12_year || '';
             document.getElementById('tribute').value = data.tribute;
             
                 currentPhotos = [];

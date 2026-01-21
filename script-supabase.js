@@ -32,6 +32,7 @@ async function loadMemorialsData() {
             name: memorial.name,
             birthDate: memorial.birth_date,
             deathDate: memorial.death_date,
+            grade_12_year: memorial.grade_12_year,
             tribute: memorial.tribute,
             photos: memorial.photos || []
         }));
@@ -141,6 +142,16 @@ function createMemorialCard(memorial) {
         dates.className = 'memorial-card-dates';
     }
 
+    const gradeYear = document.createElement('p');
+    if (memorial.grade_12_year) {
+        gradeYear.textContent = `Grade 12 Class of ${memorial.grade_12_year}`;
+        gradeYear.className = 'memorial-card-year';
+        gradeYear.style.fontSize = '0.9rem';
+        gradeYear.style.color = 'var(--primary-color)';
+        gradeYear.style.fontWeight = '600';
+        gradeYear.style.marginTop = '0.25rem';
+    }
+
     const excerpt = document.createElement('p');
     excerpt.textContent = memorial.tribute ? 
         memorial.tribute.substring(0, 150) + (memorial.tribute.length > 150 ? '...' : '') : 
@@ -148,6 +159,7 @@ function createMemorialCard(memorial) {
 
     content.appendChild(title);
     if (dates.textContent) content.appendChild(dates);
+    if (gradeYear.textContent) content.appendChild(gradeYear);
     content.appendChild(excerpt);
 
     // Only add image if photos exist
@@ -218,6 +230,10 @@ function loadMemorialPage() {
     
     if (memorial.birthDate || memorial.deathDate) {
         html += `<div class="memorial-dates">${formatDates(memorial.birthDate, memorial.deathDate)}</div>`;
+    }
+    
+    if (memorial.grade_12_year) {
+        html += `<div class="memorial-grade-year" style="font-size: 1.1rem; margin-top: 0.5rem; opacity: 0.95;">Grade 12 Class of ${memorial.grade_12_year}</div>`;
     }
     
     html += '</div>';
@@ -387,6 +403,7 @@ function setupPhotoGallery(photos) {
 // Setup search functionality
 function setupSearch() {
     const searchInput = document.getElementById('searchInput');
+    const yearInput = document.getElementById('yearInput');
     const clearButton = document.getElementById('clearButton');
     const searchResults = document.getElementById('searchResults');
 
@@ -394,17 +411,32 @@ function setupSearch() {
 
     function performSearch() {
         const query = searchInput.value.trim().toLowerCase();
+        const year = yearInput ? yearInput.value.trim() : '';
         
-        if (query === '') {
+        if (query === '' && year === '') {
             loadAllMemorials();
             if (searchResults) searchResults.textContent = '';
             return;
         }
 
         const filtered = memorialsData.filter(memorial => {
-            const nameMatch = memorial.name.toLowerCase().includes(query);
-            const tributeMatch = memorial.tribute && memorial.tribute.toLowerCase().includes(query);
-            return nameMatch || tributeMatch;
+            let nameMatch = true;
+            let yearMatch = true;
+
+            // Filter by name/tribute if query is provided
+            if (query !== '') {
+                nameMatch = memorial.name.toLowerCase().includes(query);
+                const tributeMatch = memorial.tribute && memorial.tribute.toLowerCase().includes(query);
+                nameMatch = nameMatch || tributeMatch;
+            }
+
+            // Filter by Grade 12 year if provided
+            if (year !== '') {
+                const searchYear = parseInt(year);
+                yearMatch = memorial.grade_12_year && memorial.grade_12_year === searchYear;
+            }
+
+            return nameMatch && yearMatch;
         });
 
         loadAllMemorials(filtered);
@@ -413,16 +445,24 @@ function setupSearch() {
             if (filtered.length === 0) {
                 searchResults.textContent = 'No memorials found';
             } else {
-                searchResults.textContent = `Found ${filtered.length} memorial${filtered.length === 1 ? '' : 's'}`;
+                const filters = [];
+                if (query) filters.push(`name: "${query}"`);
+                if (year) filters.push(`year: ${year}`);
+                const filterText = filters.length > 0 ? ` (${filters.join(', ')})` : '';
+                searchResults.textContent = `Found ${filtered.length} memorial${filtered.length === 1 ? '' : 's'}${filterText}`;
             }
         }
     }
 
     searchInput.addEventListener('input', performSearch);
+    if (yearInput) {
+        yearInput.addEventListener('input', performSearch);
+    }
 
     if (clearButton) {
         clearButton.addEventListener('click', () => {
             searchInput.value = '';
+            if (yearInput) yearInput.value = '';
             performSearch();
             searchInput.focus();
         });
