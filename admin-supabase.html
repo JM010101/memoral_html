@@ -610,6 +610,7 @@
                     birth_year: document.getElementById('birthYear').value ? parseInt(document.getElementById('birthYear').value) : null,
                     death_year: document.getElementById('deathYear').value ? parseInt(document.getElementById('deathYear').value) : null,
                     grade_12_year: document.getElementById('grade12Year').value ? parseInt(document.getElementById('grade12Year').value) : null,
+                    is_faculty: document.getElementById('isFaculty').checked,
                     tribute: document.getElementById('tribute').value,
                     photos: uploadedPhotos
                 };
@@ -689,6 +690,7 @@
             document.getElementById('birthYear').value = data.birth_year || '';
             document.getElementById('deathYear').value = data.death_year || '';
             document.getElementById('grade12Year').value = data.grade_12_year || '';
+            document.getElementById('isFaculty').checked = data.is_faculty || false;
             document.getElementById('tribute').value = data.tribute;
             
                 currentPhotos = [];
