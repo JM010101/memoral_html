@@ -35,9 +35,17 @@ function displayPhotos() {
     container.innerHTML = selectedPhotos.map((photo, index) => `
         <div class="photo-preview-item">
             <img src="${photo.dataUrl}" alt="Photo ${index + 1}">
+            ${index === 0 ? '<span class="primary-badge">PRIMARY</span>' : '<button type="button" class="set-primary-btn" onclick="setPrimary(' + index + ')">Set as Primary</button>'}
             <button type="button" class="remove-photo-btn" onclick="removePhoto(${index})">×</button>
         </div>
     `).join('');
+}
+
+function setPrimary(index) {
+    // Move selected photo to the front of the array
+    const photo = selectedPhotos.splice(index, 1)[0];
+    selectedPhotos.unshift(photo);
+    displayPhotos();
 }
 
 function removePhoto(index) {

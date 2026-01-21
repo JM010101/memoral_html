@@ -80,6 +80,37 @@
             font-size: 16px;
             line-height: 1;
         }
+        
+        .primary-badge {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background: #10b981;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        
+        .set-primary-btn {
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(3, 19, 252, 0.9);
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        
+        .set-primary-btn:hover {
+            background: rgba(3, 19, 252, 1);
+        }
     </style>
 </head>
 <body>
@@ -177,7 +208,7 @@
                     <label>Photos (1-5 photos required) *</label>
                     <input type="file" id="photoInput" accept="image/*" multiple style="margin-bottom: 1rem;">
                     <div id="photoPreview"></div>
-                    <small>JPG, PNG, WEBP • Max 5MB each • At least 1 photo required</small>
+                    <small>JPG, PNG, WEBP • Max 5MB each • At least 1 photo required • <strong>First photo will be the primary display photo</strong></small>
                 </div>
 
                 <div class="form-group">
