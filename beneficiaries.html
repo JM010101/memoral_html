@@ -118,5 +118,14 @@
             </div>
         </div>
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script-supabase.js"></script>
+    <script>
+        // Load beneficiaries when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            loadBeneficiaries();
+        });
+    </script>
 </body>
 </html>

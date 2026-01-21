@@ -74,12 +74,12 @@
                         </p>
                     </div>
 
-                    <!-- Partner logos/list section - can be added here later -->
+                    <!-- Partner logos/list section -->
                     <div style="margin-top: 4rem; padding-top: 3rem; border-top: 2px solid var(--border-color);">
                         <h3 style="text-align: center; color: var(--text-color); margin-bottom: 2rem; font-size: 1.5rem;">Partner Organizations</h3>
-                        <p style="text-align: center; color: var(--text-light); font-style: italic;">
-                            Partner information coming soon...
-                        </p>
+                        <div id="partnersContainer">
+                            <p style="text-align: center; color: var(--text-light); font-style: italic;">Loading partners...</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -114,5 +114,14 @@
             </div>
         </div>
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script-supabase.js"></script>
+    <script>
+        // Load partners when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPartners();
+        });
+    </script>
 </body>
 </html>

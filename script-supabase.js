@@ -556,3 +556,95 @@ function getProxiedImageUrl(url) {
     // For other URLs (external images), return as is
     return url;
 }
+
+// ========== PARTNERS & BENEFICIARIES ==========
+
+// Load and display partners
+async function loadPartners() {
+    try {
+        const response = await fetch('/api/get-partners');
+        if (!response.ok) {
+            throw new Error('Failed to fetch partners');
+        }
+        const partners = await response.json();
+        displayPartners(partners);
+    } catch (error) {
+        console.error('Error loading partners:', error);
+        const container = document.getElementById('partnersContainer');
+        if (container) {
+            container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 2rem;">Unable to load partners at this time.</p>';
+        }
+    }
+}
+
+function displayPartners(partners) {
+    const container = document.getElementById('partnersContainer');
+    if (!container) return;
+
+    if (partners.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: var(--text-light); font-style: italic;">Partner information coming soon...</p>';
+        return;
+    }
+
+    container.innerHTML = partners.map(partner => `
+        <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); display: flex; gap: 1.5rem; align-items: center; margin-bottom: 1.5rem;">
+            ${partner.logo_url ? 
+                `<img src="${getProxiedImageUrl(partner.logo_url)}" alt="${escapeHtml(partner.name)}" style="width: 120px; height: 120px; object-fit: contain; border: 2px solid var(--border-color); border-radius: 8px; padding: 0.5rem; background: white;">` : 
+                '<div style="width: 120px; height: 120px; background: var(--bg-light); border: 2px solid var(--border-color); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 3rem;">🤝</div>'
+            }
+            <div style="flex: 1;">
+                <h3 style="margin: 0 0 0.75rem 0; color: var(--primary-color); font-size: 1.5rem;">${escapeHtml(partner.name)}</h3>
+                ${partner.description ? `<p style="margin: 0 0 0.75rem 0; line-height: 1.7;">${escapeHtml(partner.description)}</p>` : ''}
+                ${partner.website_url ? `<p style="margin: 0;"><a href="${escapeHtml(partner.website_url)}" target="_blank" rel="noopener noreferrer" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">Visit Website →</a></p>` : ''}
+            </div>
+        </div>
+    `).join('');
+}
+
+// Load and display beneficiaries
+async function loadBeneficiaries() {
+    try {
+        const response = await fetch('/api/get-beneficiaries');
+        if (!response.ok) {
+            throw new Error('Failed to fetch beneficiaries');
+        }
+        const beneficiaries = await response.json();
+        displayBeneficiaries(beneficiaries);
+    } catch (error) {
+        console.error('Error loading beneficiaries:', error);
+        const container = document.getElementById('beneficiariesContainer');
+        if (container) {
+            container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 2rem;">Unable to load beneficiaries at this time.</p>';
+        }
+    }
+}
+
+function displayBeneficiaries(beneficiaries) {
+    const container = document.getElementById('beneficiariesContainer');
+    if (!container) return;
+
+    if (beneficiaries.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: var(--text-light); font-style: italic;">Information on the program\'s impact and updates will be shared here, respecting the privacy of all beneficiaries.</p>';
+        return;
+    }
+
+    container.innerHTML = beneficiaries.map(beneficiary => `
+        <div style="background: white; padding: 2.5rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 2rem;">
+            <h3 style="margin: 0 0 1rem 0; color: var(--primary-color); font-size: 1.5rem;">${escapeHtml(beneficiary.title)}</h3>
+            <p style="margin: 0 0 1rem 0; line-height: 1.9; font-size: 1.05rem;">${escapeHtml(beneficiary.description)}</p>
+            ${beneficiary.impact_details ? `
+                <div style="background: rgba(3, 19, 252, 0.03); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--primary-color); margin-top: 1rem;">
+                    <p style="margin: 0; line-height: 1.7; font-style: italic; color: var(--text-color);">${escapeHtml(beneficiary.impact_details)}</p>
+                </div>
+            ` : ''}
+        </div>
+    `).join('');
+}
+
+// Escape HTML to prevent XSS
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}

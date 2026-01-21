@@ -308,6 +308,85 @@
                 <h2>💬 Pending Comments</h2>
                 <div id="pendingCommentsList">Loading...</div>
             </div>
+
+            <div class="partners-management" style="margin-top: 3rem; padding-top: 2rem; border-top: 3px solid var(--border-color);">
+                <h2>🤝 Manage Partners</h2>
+                <button onclick="showPartnerForm()" class="btn-primary" style="margin-bottom: 1rem;">➕ Add New Partner</button>
+                
+                <div id="partnerFormContainer" style="display: none; background: rgba(3, 19, 252, 0.05); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                    <h3 id="partnerFormTitle">Add Partner</h3>
+                    <form id="partnerForm" onsubmit="submitPartner(event)">
+                        <input type="hidden" id="partnerId">
+                        <div class="form-group">
+                            <label for="partnerName">Partner Name*:</label>
+                            <input type="text" id="partnerName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="partnerDescription">Description:</label>
+                            <textarea id="partnerDescription" style="min-height: 100px;"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="partnerWebsite">Website URL:</label>
+                            <input type="url" id="partnerWebsite" placeholder="https://example.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Partner Logo:</label>
+                            <div class="photo-upload" onclick="document.getElementById('partnerLogoInput').click()">
+                                <p>🖼️ Click to upload logo</p>
+                                <small>JPG, PNG • Max 5MB</small>
+                            </div>
+                            <input type="file" id="partnerLogoInput" accept="image/*" style="display: none;" onchange="handlePartnerLogoUpload(event)">
+                            <div id="partnerLogoPreview" class="photo-preview"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="partnerDisplayOrder">Display Order:</label>
+                            <input type="number" id="partnerDisplayOrder" value="0" min="0">
+                            <small style="color: var(--text-light);">Lower numbers appear first</small>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button type="submit" class="btn-primary">💾 Save Partner</button>
+                            <button type="button" onclick="cancelPartnerForm()" class="btn-secondary">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div id="partnersList">Loading...</div>
+            </div>
+
+            <div class="beneficiaries-management" style="margin-top: 3rem; padding-top: 2rem; border-top: 3px solid var(--border-color);">
+                <h2>🎓 Manage Beneficiaries</h2>
+                <button onclick="showBeneficiaryForm()" class="btn-primary" style="margin-bottom: 1rem;">➕ Add New Beneficiary</button>
+                
+                <div id="beneficiaryFormContainer" style="display: none; background: rgba(3, 19, 252, 0.05); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                    <h3 id="beneficiaryFormTitle">Add Beneficiary</h3>
+                    <form id="beneficiaryForm" onsubmit="submitBeneficiary(event)">
+                        <input type="hidden" id="beneficiaryId">
+                        <div class="form-group">
+                            <label for="beneficiaryTitle">Title*:</label>
+                            <input type="text" id="beneficiaryTitle" required placeholder="e.g., Student Support Program">
+                        </div>
+                        <div class="form-group">
+                            <label for="beneficiaryDescription">Description*:</label>
+                            <textarea id="beneficiaryDescription" required style="min-height: 150px;"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="beneficiaryImpact">Impact Details:</label>
+                            <textarea id="beneficiaryImpact" style="min-height: 100px;" placeholder="Additional details about the program's impact..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="beneficiaryDisplayOrder">Display Order:</label>
+                            <input type="number" id="beneficiaryDisplayOrder" value="0" min="0">
+                            <small style="color: var(--text-light);">Lower numbers appear first</small>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button type="submit" class="btn-primary">💾 Save Beneficiary</button>
+                            <button type="button" onclick="cancelBeneficiaryForm()" class="btn-secondary">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div id="beneficiariesList">Loading...</div>
+            </div>
         </div>
     </div>
 
@@ -689,6 +768,342 @@
                 document.getElementById('memorialId').value = id;
             }
         });
+
+        // ========== PARTNERS MANAGEMENT ==========
+        let currentPartnerLogo = null;
+        let editingPartnerId = null;
+
+        async function loadPartners() {
+            try {
+                const response = await fetch('/api/get-partners');
+                const partners = await response.json();
+                displayPartners(partners);
+            } catch (error) {
+                console.error('Error loading partners:', error);
+                document.getElementById('partnersList').innerHTML = '<p class="error">Failed to load partners</p>';
+            }
+        }
+
+        function displayPartners(partners) {
+            const container = document.getElementById('partnersList');
+            
+            if (partners.length === 0) {
+                container.innerHTML = '<p style="text-align: center; padding: 2rem; color: var(--text-light);">No partners yet</p>';
+                return;
+            }
+
+            container.innerHTML = partners.map(partner => `
+                <div class="memorial-item" style="display: flex; gap: 1rem; align-items: start;">
+                    ${partner.logo_url ? `<img src="${partner.logo_url}" alt="${escapeHtml(partner.name)}" style="width: 80px; height: 80px; object-fit: contain; border: 1px solid var(--border-color); border-radius: 4px;">` : '<div style="width: 80px; height: 80px; background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 2rem;">🤝</div>'}
+                    <div style="flex: 1;">
+                        <h3 style="margin: 0 0 0.5rem 0; color: var(--primary-color);">${escapeHtml(partner.name)}</h3>
+                        ${partner.description ? `<p style="margin: 0 0 0.5rem 0; color: var(--text-light);">${escapeHtml(partner.description)}</p>` : ''}
+                        ${partner.website_url ? `<p style="margin: 0 0 0.5rem 0;"><a href="${escapeHtml(partner.website_url)}" target="_blank" style="color: var(--primary-color);">Visit Website →</a></p>` : ''}
+                        <p style="margin: 0; font-size: 0.85rem; color: var(--text-light);">Display Order: ${partner.display_order}</p>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button onclick="editPartner('${partner.id}')" class="btn-secondary" style="padding: 0.5rem 1rem;">✏️ Edit</button>
+                        <button onclick="deletePartner('${partner.id}')" class="btn-secondary" style="background: #dc2626; padding: 0.5rem 1rem;">🗑️ Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showPartnerForm() {
+            document.getElementById('partnerFormContainer').style.display = 'block';
+            document.getElementById('partnerFormTitle').textContent = 'Add Partner';
+            document.getElementById('partnerForm').reset();
+            document.getElementById('partnerId').value = '';
+            document.getElementById('partnerLogoPreview').innerHTML = '';
+            currentPartnerLogo = null;
+            editingPartnerId = null;
+        }
+
+        function cancelPartnerForm() {
+            document.getElementById('partnerFormContainer').style.display = 'none';
+            document.getElementById('partnerForm').reset();
+            currentPartnerLogo = null;
+            editingPartnerId = null;
+        }
+
+        async function handlePartnerLogoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (file.size > 5 * 1024 * 1024) {
+                alert('File size must be less than 5MB');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                currentPartnerLogo = e.target.result;
+                document.getElementById('partnerLogoPreview').innerHTML = `
+                    <div class="photo-item">
+                        <img src="${currentPartnerLogo}" alt="Partner Logo">
+                        <button type="button" class="remove-photo" onclick="removePartnerLogo()">×</button>
+                    </div>
+                `;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removePartnerLogo() {
+            currentPartnerLogo = null;
+            document.getElementById('partnerLogoPreview').innerHTML = '';
+            document.getElementById('partnerLogoInput').value = '';
+        }
+
+        async function submitPartner(event) {
+            event.preventDefault();
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Saving...';
+
+            try {
+                let logoUrl = currentPartnerLogo;
+                
+                // Upload logo if new file selected
+                if (currentPartnerLogo && currentPartnerLogo.startsWith('data:')) {
+                    const filename = `partner-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.jpg`;
+                    const uploadResponse = await fetch('/api/supabase-upload-image', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ filename, content: currentPartnerLogo })
+                    });
+                    const uploadResult = await uploadResponse.json();
+                    logoUrl = uploadResult.url;
+                }
+
+                const partner = {
+                    name: document.getElementById('partnerName').value,
+                    description: document.getElementById('partnerDescription').value,
+                    website_url: document.getElementById('partnerWebsite').value,
+                    logo_url: logoUrl,
+                    display_order: parseInt(document.getElementById('partnerDisplayOrder').value) || 0
+                };
+
+                if (editingPartnerId) {
+                    partner.id = editingPartnerId;
+                }
+
+                const response = await fetch('/api/supabase-save-partner', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ partner })
+                });
+
+                if (!response.ok) throw new Error('Failed to save partner');
+
+                showMessage('✅ Partner saved successfully!', 'success');
+                cancelPartnerForm();
+                loadPartners();
+            } catch (error) {
+                console.error('Error saving partner:', error);
+                showMessage('❌ Failed to save partner', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '💾 Save Partner';
+            }
+        }
+
+        async function editPartner(id) {
+            try {
+                const response = await fetch('/api/get-partners');
+                const partners = await response.json();
+                const partner = partners.find(p => p.id === id);
+                
+                if (!partner) throw new Error('Partner not found');
+
+                document.getElementById('partnerId').value = partner.id;
+                document.getElementById('partnerName').value = partner.name;
+                document.getElementById('partnerDescription').value = partner.description || '';
+                document.getElementById('partnerWebsite').value = partner.website_url || '';
+                document.getElementById('partnerDisplayOrder').value = partner.display_order || 0;
+                
+                if (partner.logo_url) {
+                    currentPartnerLogo = partner.logo_url;
+                    document.getElementById('partnerLogoPreview').innerHTML = `
+                        <div class="photo-item">
+                            <img src="${partner.logo_url}" alt="Partner Logo">
+                            <button type="button" class="remove-photo" onclick="removePartnerLogo()">×</button>
+                        </div>
+                    `;
+                }
+                
+                editingPartnerId = id;
+                document.getElementById('partnerFormTitle').textContent = 'Edit Partner';
+                document.getElementById('partnerFormContainer').style.display = 'block';
+                window.scrollTo({ top: document.getElementById('partnerFormContainer').offsetTop - 100, behavior: 'smooth' });
+            } catch (error) {
+                console.error('Error loading partner:', error);
+                showMessage('❌ Failed to load partner', 'error');
+            }
+        }
+
+        async function deletePartner(id) {
+            if (!confirm('Are you sure you want to delete this partner?')) return;
+
+            try {
+                const response = await fetch('/api/supabase-delete-partner', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id })
+                });
+
+                if (!response.ok) throw new Error('Failed to delete partner');
+
+                showMessage('✅ Partner deleted successfully', 'success');
+                loadPartners();
+            } catch (error) {
+                console.error('Error deleting partner:', error);
+                showMessage('❌ Failed to delete partner', 'error');
+            }
+        }
+
+        // ========== BENEFICIARIES MANAGEMENT ==========
+        let editingBeneficiaryId = null;
+
+        async function loadBeneficiaries() {
+            try {
+                const response = await fetch('/api/get-beneficiaries');
+                const beneficiaries = await response.json();
+                displayBeneficiaries(beneficiaries);
+            } catch (error) {
+                console.error('Error loading beneficiaries:', error);
+                document.getElementById('beneficiariesList').innerHTML = '<p class="error">Failed to load beneficiaries</p>';
+            }
+        }
+
+        function displayBeneficiaries(beneficiaries) {
+            const container = document.getElementById('beneficiariesList');
+            
+            if (beneficiaries.length === 0) {
+                container.innerHTML = '<p style="text-align: center; padding: 2rem; color: var(--text-light);">No beneficiaries yet</p>';
+                return;
+            }
+
+            container.innerHTML = beneficiaries.map(beneficiary => `
+                <div class="memorial-item">
+                    <div style="flex: 1;">
+                        <h3 style="margin: 0 0 0.5rem 0; color: var(--primary-color);">${escapeHtml(beneficiary.title)}</h3>
+                        <p style="margin: 0 0 0.5rem 0; color: var(--text-color);">${escapeHtml(beneficiary.description)}</p>
+                        ${beneficiary.impact_details ? `<p style="margin: 0 0 0.5rem 0; color: var(--text-light); font-style: italic;">${escapeHtml(beneficiary.impact_details)}</p>` : ''}
+                        <p style="margin: 0; font-size: 0.85rem; color: var(--text-light);">Display Order: ${beneficiary.display_order}</p>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button onclick="editBeneficiary('${beneficiary.id}')" class="btn-secondary" style="padding: 0.5rem 1rem;">✏️ Edit</button>
+                        <button onclick="deleteBeneficiary('${beneficiary.id}')" class="btn-secondary" style="background: #dc2626; padding: 0.5rem 1rem;">🗑️ Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showBeneficiaryForm() {
+            document.getElementById('beneficiaryFormContainer').style.display = 'block';
+            document.getElementById('beneficiaryFormTitle').textContent = 'Add Beneficiary';
+            document.getElementById('beneficiaryForm').reset();
+            document.getElementById('beneficiaryId').value = '';
+            editingBeneficiaryId = null;
+        }
+
+        function cancelBeneficiaryForm() {
+            document.getElementById('beneficiaryFormContainer').style.display = 'none';
+            document.getElementById('beneficiaryForm').reset();
+            editingBeneficiaryId = null;
+        }
+
+        async function submitBeneficiary(event) {
+            event.preventDefault();
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Saving...';
+
+            try {
+                const beneficiary = {
+                    title: document.getElementById('beneficiaryTitle').value,
+                    description: document.getElementById('beneficiaryDescription').value,
+                    impact_details: document.getElementById('beneficiaryImpact').value,
+                    display_order: parseInt(document.getElementById('beneficiaryDisplayOrder').value) || 0
+                };
+
+                if (editingBeneficiaryId) {
+                    beneficiary.id = editingBeneficiaryId;
+                }
+
+                const response = await fetch('/api/supabase-save-beneficiary', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ beneficiary })
+                });
+
+                if (!response.ok) throw new Error('Failed to save beneficiary');
+
+                showMessage('✅ Beneficiary saved successfully!', 'success');
+                cancelBeneficiaryForm();
+                loadBeneficiaries();
+            } catch (error) {
+                console.error('Error saving beneficiary:', error);
+                showMessage('❌ Failed to save beneficiary', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '💾 Save Beneficiary';
+            }
+        }
+
+        async function editBeneficiary(id) {
+            try {
+                const response = await fetch('/api/get-beneficiaries');
+                const beneficiaries = await response.json();
+                const beneficiary = beneficiaries.find(b => b.id === id);
+                
+                if (!beneficiary) throw new Error('Beneficiary not found');
+
+                document.getElementById('beneficiaryId').value = beneficiary.id;
+                document.getElementById('beneficiaryTitle').value = beneficiary.title;
+                document.getElementById('beneficiaryDescription').value = beneficiary.description;
+                document.getElementById('beneficiaryImpact').value = beneficiary.impact_details || '';
+                document.getElementById('beneficiaryDisplayOrder').value = beneficiary.display_order || 0;
+                
+                editingBeneficiaryId = id;
+                document.getElementById('beneficiaryFormTitle').textContent = 'Edit Beneficiary';
+                document.getElementById('beneficiaryFormContainer').style.display = 'block';
+                window.scrollTo({ top: document.getElementById('beneficiaryFormContainer').offsetTop - 100, behavior: 'smooth' });
+            } catch (error) {
+                console.error('Error loading beneficiary:', error);
+                showMessage('❌ Failed to load beneficiary', 'error');
+            }
+        }
+
+        async function deleteBeneficiary(id) {
+            if (!confirm('Are you sure you want to delete this beneficiary?')) return;
+
+            try {
+                const response = await fetch('/api/supabase-delete-beneficiary', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id })
+                });
+
+                if (!response.ok) throw new Error('Failed to delete beneficiary');
+
+                showMessage('✅ Beneficiary deleted successfully', 'success');
+                loadBeneficiaries();
+            } catch (error) {
+                console.error('Error deleting beneficiary:', error);
+                showMessage('❌ Failed to delete beneficiary', 'error');
+            }
+        }
+
+        // Load partners and beneficiaries on login
+        const originalLogin = login;
+        login = function() {
+            originalLogin();
+            if (document.getElementById('passwordInput').value === ADMIN_PASSWORD) {
+                loadPartners();
+                loadBeneficiaries();
+            }
+        };
     </script>
 </body>
 </html>
