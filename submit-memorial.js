@@ -122,6 +122,7 @@ document.getElementById('submissionForm').addEventListener('submit', async (e) =
             birthYear: parseInt(document.getElementById('birthYear').value),
             deathYear: parseInt(document.getElementById('deathYear').value),
             grade12Year: document.getElementById('grade12Year').value ? parseInt(document.getElementById('grade12Year').value) : null,
+            isFaculty: document.getElementById('isFaculty').checked,
             tribute: document.getElementById('tribute').value.trim(),
             photos: selectedPhotos.map(p => p.dataUrl),
             recaptchaToken: recaptchaResponse

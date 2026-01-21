@@ -32,7 +32,7 @@ export default async function handler(req, res) {
 // Handle public memorial submission
 async function handlePublicSubmission(req, res) {
     try {
-        const { submitterName, submitterEmail, name, lastName, birthYear, deathYear, grade12Year, tribute, photos, recaptchaToken } = req.body;
+        const { submitterName, submitterEmail, name, lastName, birthYear, deathYear, grade12Year, isFaculty, tribute, photos, recaptchaToken } = req.body;
 
         if (!submitterName || !submitterEmail || !name || !lastName || !birthYear || !deathYear || !tribute) {
             return res.status(400).json({ error: 'Missing required fields' });
@@ -99,6 +99,7 @@ async function handlePublicSubmission(req, res) {
                 birth_year: birthYear,
                 death_year: deathYear,
                 grade_12_year: grade12Year,
+                is_faculty: isFaculty || false,
                 tribute: tribute,
                 photos: uploadedPhotos,
                 status: 'pending',

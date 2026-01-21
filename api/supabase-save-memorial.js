@@ -40,6 +40,7 @@ export default async function handler(req, res) {
                 birth_year: memorial.birth_year || null,
                 death_year: memorial.death_year || null,
                 grade_12_year: memorial.grade_12_year || null,
+                is_faculty: memorial.is_faculty || false,
                 tribute: memorial.tribute || '',
                 photos: memorial.photos || []
             })
