@@ -36,8 +36,10 @@ export default async function handler(req, res) {
             .upsert({
                 id: memorial.id,
                 name: memorial.name,
-                birth_date: memorial.birthDate || null,
-                death_date: memorial.deathDate || null,
+                last_name: memorial.last_name || null,
+                birth_year: memorial.birth_year || null,
+                death_year: memorial.death_year || null,
+                grade_12_year: memorial.grade_12_year || null,
                 tribute: memorial.tribute || '',
                 photos: memorial.photos || []
             })
