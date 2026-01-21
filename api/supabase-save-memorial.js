@@ -48,7 +48,8 @@ export default async function handler(req, res) {
 
         if (error) {
             console.error('Supabase error:', error);
-            throw new Error(error.message);
+            console.error('Memorial data:', memorial);
+            throw new Error(`Database error: ${error.message}. Hint: Make sure all database columns exist (last_name, birth_year, death_year, grade_12_year).`);
         }
 
         return res.status(200).json({ 
