@@ -34,7 +34,7 @@ async function handlePublicSubmission(req, res) {
     try {
         const { submitterName, submitterEmail, name, lastName, birthYear, deathYear, grade12Year, tribute, photos, recaptchaToken } = req.body;
 
-        if (!submitterName || !submitterEmail || !name || !lastName || !birthYear || !deathYear || !tribute || !photos || photos.length === 0) {
+        if (!submitterName || !submitterEmail || !name || !lastName || !birthYear || !deathYear || !tribute) {
             return res.status(400).json({ error: 'Missing required fields' });
         }
 
@@ -60,31 +60,33 @@ async function handlePublicSubmission(req, res) {
 
         const memorialId = `${lastName.toLowerCase().replace(/[^a-z]/g, '')}-${name.toLowerCase().replace(/[^a-z]/g, '').substring(0, 10)}-${Date.now()}`;
 
-        // Upload photos
+        // Upload photos (if any)
         const uploadedPhotos = [];
-        for (let i = 0; i < photos.length; i++) {
-            const base64Data = photos[i].split(',')[1];
-            const buffer = Buffer.from(base64Data, 'base64');
-            const contentType = photos[i].split(';')[0].split(':')[1];
-            const extension = contentType.split('/')[1];
-            const filename = `${memorialId}-${i}.${extension}`;
+        if (photos && photos.length > 0) {
+            for (let i = 0; i < photos.length; i++) {
+                const base64Data = photos[i].split(',')[1];
+                const buffer = Buffer.from(base64Data, 'base64');
+                const contentType = photos[i].split(';')[0].split(':')[1];
+                const extension = contentType.split('/')[1];
+                const filename = `${memorialId}-${i}.${extension}`;
 
-            const { error: uploadError } = await supabase.storage
-                .from('memorial-images')
-                .upload(filename, buffer, {
-                    contentType: contentType,
-                    upsert: true
+                const { error: uploadError } = await supabase.storage
+                    .from('memorial-images')
+                    .upload(filename, buffer, {
+                        contentType: contentType,
+                        upsert: true
+                    });
+
+                if (uploadError) {
+                    console.error('Photo upload error:', uploadError);
+                    throw new Error('Failed to upload photo');
+                }
+
+                uploadedPhotos.push({
+                    url: `/api/get-image?filename=${filename}`,
+                    alt: `Photo of ${name}`
                 });
-
-            if (uploadError) {
-                console.error('Photo upload error:', uploadError);
-                throw new Error('Failed to upload photo');
             }
-
-            uploadedPhotos.push({
-                url: `/api/get-image?filename=${filename}`,
-                alt: `Photo of ${name}`
-            });
         }
 
         // Insert memorial with pending status
