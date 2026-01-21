@@ -16,10 +16,25 @@ export default async function handler(req, res) {
     }
 
     try {
-        const { memorialId, name, email, comment } = req.body;
+        const { memorialId, name, email, comment, recaptchaToken } = req.body;
 
         if (!memorialId || !name || !comment) {
             return res.status(400).json({ error: 'Missing required fields' });
+        }
+
+        // Verify reCAPTCHA
+        if (!recaptchaToken) {
+            return res.status(400).json({ error: 'reCAPTCHA verification required' });
+        }
+
+        const recaptchaSecret = process.env.RECAPTCHA_SECRET_KEY;
+        const recaptchaVerifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${recaptchaSecret}&response=${recaptchaToken}`;
+        
+        const recaptchaResponse = await fetch(recaptchaVerifyUrl, { method: 'POST' });
+        const recaptchaData = await recaptchaResponse.json();
+
+        if (!recaptchaData.success) {
+            return res.status(400).json({ error: 'reCAPTCHA verification failed. Please try again.' });
         }
 
         // Initialize Supabase client (using anon key for public access)

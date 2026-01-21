@@ -296,6 +296,10 @@ function loadMemorialPage() {
     html += '<label for="commentText">Comment *</label>';
     html += '<textarea id="commentText" required maxlength="1000" rows="4"></textarea>';
     html += '</div>';
+    html += '<div class="form-group">';
+    html += '<div class="g-recaptcha" data-sitekey="6LfYour_Site_Key_Here"></div>';
+    html += '<small style="color: var(--text-light); margin-top: 0.5rem; display: block;">Please complete the reCAPTCHA to submit your comment</small>';
+    html += '</div>';
     html += '<button type="submit" class="btn btn-primary">Submit Comment</button>';
     html += '<div id="commentFormMessage"></div>';
     html += '</form>';
@@ -541,6 +545,13 @@ function setupCommentForm(memorialId) {
             return;
         }
 
+        // Verify reCAPTCHA
+        const recaptchaResponse = grecaptcha.getResponse();
+        if (!recaptchaResponse) {
+            messageDiv.innerHTML = '<p class="error-message">Please complete the reCAPTCHA verification.</p>';
+            return;
+        }
+
         const submitBtn = form.querySelector('button[type="submit"]');
         submitBtn.disabled = true;
         submitBtn.textContent = 'Submitting...';
@@ -553,7 +564,8 @@ function setupCommentForm(memorialId) {
                     memorialId,
                     name,
                     email,
-                    comment
+                    comment,
+                    recaptchaToken: recaptchaResponse
                 })
             });
 
@@ -562,6 +574,7 @@ function setupCommentForm(memorialId) {
             if (response.ok) {
                 messageDiv.innerHTML = '<p class="success-message">✅ Thank you! Your comment has been submitted and will appear after approval.</p>';
                 form.reset();
+                grecaptcha.reset(); // Reset reCAPTCHA
             } else {
                 throw new Error(result.error || 'Failed to submit comment');
             }
