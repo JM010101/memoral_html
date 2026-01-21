@@ -292,9 +292,15 @@ function loadMemorialPage() {
 
     container.innerHTML = html;
 
-    // Setup photo gallery lightbox
+    // Setup photo gallery lightbox (filter out placeholder images)
     if (memorial.photos && memorial.photos.length > 0) {
-        setupPhotoGallery(memorial.photos);
+        const validPhotos = memorial.photos.filter(photo => {
+            const url = typeof photo === 'string' ? photo : photo.url;
+            return url && !url.includes('placeholder.com');
+        });
+        if (validPhotos.length > 0) {
+            setupPhotoGallery(validPhotos);
+        }
     }
 
     // Load and display comments
@@ -320,9 +326,10 @@ function setupPhotoGallery(photos) {
         currentIndex = index;
         const photo = photos[index];
         const photoUrl = typeof photo === 'string' ? photo : photo.url;
+        const proxiedUrl = getProxiedImageUrl(photoUrl);
         const photoAlt = typeof photo === 'string' ? `Photo ${index + 1}` : photo.alt;
         
-        lightboxImage.src = photoUrl;
+        lightboxImage.src = proxiedUrl;
         lightboxImage.alt = photoAlt;
         lightboxCaption.textContent = `${index + 1} / ${photos.length} - ${photoAlt}`;
         lightbox.style.display = 'flex';
