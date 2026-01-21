@@ -223,6 +223,31 @@ function loadMemorialPage() {
         html += '</div>';
     }
 
+    // Comments section
+    html += '<div class="comments-section">';
+    html += '<h2>💬 Comments</h2>';
+    html += '<div id="commentsContainer">Loading comments...</div>';
+    html += '<div class="comment-form-container">';
+    html += '<h3>Leave a Comment</h3>';
+    html += '<form id="commentForm" class="comment-form">';
+    html += '<div class="form-group">';
+    html += '<label for="commenterName">Your Name *</label>';
+    html += '<input type="text" id="commenterName" required maxlength="100">';
+    html += '</div>';
+    html += '<div class="form-group">';
+    html += '<label for="commenterEmail">Email (optional, will not be displayed)</label>';
+    html += '<input type="email" id="commenterEmail" maxlength="100">';
+    html += '</div>';
+    html += '<div class="form-group">';
+    html += '<label for="commentText">Comment *</label>';
+    html += '<textarea id="commentText" required maxlength="1000" rows="4"></textarea>';
+    html += '</div>';
+    html += '<button type="submit" class="btn btn-primary">Submit Comment</button>';
+    html += '<div id="commentFormMessage"></div>';
+    html += '</form>';
+    html += '</div>';
+    html += '</div>';
+
     html += '<div class="back-button-container">';
     html += '<a href="memorials.html" class="btn">← Back to All Memorials</a>';
     html += '</div>';
@@ -234,6 +259,12 @@ function loadMemorialPage() {
     if (memorial.photos && memorial.photos.length > 0) {
         setupPhotoGallery(memorial.photos);
     }
+
+    // Load and display comments
+    loadComments(memorialId);
+
+    // Setup comment form submission
+    setupCommentForm(memorialId);
 }
 
 // Setup photo gallery with lightbox
@@ -352,4 +383,108 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+// Load and display comments for a memorial
+async function loadComments(memorialId) {
+    const container = document.getElementById('commentsContainer');
+    if (!container) return;
+
+    try {
+        const response = await fetch('data/comments.json');
+        if (!response.ok) throw new Error('Failed to load comments');
+        
+        const allComments = await response.json();
+        
+        // Filter approved comments for this memorial
+        const approvedComments = allComments.filter(
+            comment => comment.memorialId === memorialId && comment.status === 'approved'
+        );
+
+        if (approvedComments.length === 0) {
+            container.innerHTML = '<p class="no-comments">No comments yet. Be the first to share your memories!</p>';
+            return;
+        }
+
+        // Sort by approved date (newest first)
+        approvedComments.sort((a, b) => new Date(b.approvedAt || b.timestamp) - new Date(a.approvedAt || a.timestamp));
+
+        let html = '<div class="comments-list">';
+        approvedComments.forEach(comment => {
+            const date = new Date(comment.approvedAt || comment.timestamp);
+            const formattedDate = date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+
+            html += '<div class="comment-item">';
+            html += `<div class="comment-header">`;
+            html += `<strong class="comment-author">${escapeHtml(comment.name)}</strong>`;
+            html += `<span class="comment-date">${formattedDate}</span>`;
+            html += '</div>';
+            html += `<div class="comment-text">${escapeHtml(comment.comment)}</div>`;
+            html += '</div>';
+        });
+        html += '</div>';
+
+        container.innerHTML = html;
+    } catch (error) {
+        console.error('Error loading comments:', error);
+        container.innerHTML = '<p class="error-message">Unable to load comments.</p>';
+    }
+}
+
+// Setup comment form submission
+function setupCommentForm(memorialId) {
+    const form = document.getElementById('commentForm');
+    const messageDiv = document.getElementById('commentFormMessage');
+
+    if (!form) return;
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById('commenterName').value.trim();
+        const email = document.getElementById('commenterEmail').value.trim();
+        const comment = document.getElementById('commentText').value.trim();
+
+        if (!name || !comment) {
+            messageDiv.innerHTML = '<p class="error-message">Please fill in all required fields.</p>';
+            return;
+        }
+
+        // Disable form during submission
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting...';
+
+        try {
+            const response = await fetch('/api/submit-comment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    memorialId,
+                    name,
+                    email,
+                    comment
+                })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                messageDiv.innerHTML = '<p class="success-message">✅ Thank you! Your comment has been submitted and will appear after approval.</p>';
+                form.reset();
+            } else {
+                throw new Error(result.error || 'Failed to submit comment');
+            }
+        } catch (error) {
+            console.error('Error submitting comment:', error);
+            messageDiv.innerHTML = '<p class="error-message">❌ Failed to submit comment. Please try again.</p>';
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit Comment';
+        }
+    });
 }

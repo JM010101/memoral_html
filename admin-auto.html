@@ -162,7 +162,8 @@
             cursor: not-allowed;
         }
         
-        .memorial-list {
+        .memorial-list,
+        .comments-management {
             margin-top: 3rem;
         }
         
@@ -185,6 +186,80 @@
             margin: 0;
             color: var(--text-light);
             font-size: 0.875rem;
+        }
+
+        .comment-item-admin {
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            background: #fff;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            border-left: 4px solid #f59e0b;
+        }
+
+        .comment-header-admin {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .comment-info strong {
+            color: var(--primary-color);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .comment-info small {
+            color: var(--text-light);
+        }
+
+        .comment-text-admin {
+            padding: 1rem;
+            background: #f9f9f9;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            white-space: pre-wrap;
+            color: var(--text-color);
+        }
+
+        .comment-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .comment-actions button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .btn-approve {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-reject {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-delete-comment {
+            background: #dc2626;
+            color: white;
+        }
+
+        .no-pending-comments {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-light);
+            font-style: italic;
         }
         
         .memorial-actions button {
@@ -300,6 +375,11 @@
                 <h2>Existing Memorials</h2>
                 <div id="memorialsList"></div>
             </div>
+
+            <div class="comments-management">
+                <h2>💬 Pending Comments</h2>
+                <div id="pendingCommentsList">Loading...</div>
+            </div>
         </div>
     </div>
 
@@ -317,6 +397,7 @@
                 document.getElementById('loginSection').style.display = 'none';
                 document.getElementById('adminSection').style.display = 'block';
                 loadMemorials();
+                loadPendingComments();
             } else {
                 document.getElementById('loginMessage').innerHTML = '<p style="color: #dc2626; margin-top: 1rem;">❌ Incorrect password</p>';
             }
@@ -544,6 +625,95 @@
                 document.getElementById('memorialId').value = id;
             }
         });
+
+        // Comment Management Functions
+        async function loadPendingComments() {
+            const container = document.getElementById('pendingCommentsList');
+            try {
+                const response = await fetch('data/comments.json');
+                if (!response.ok) throw new Error('Failed to load comments');
+                
+                const allComments = await response.json();
+                const pendingComments = allComments.filter(c => c.status === 'pending');
+
+                if (pendingComments.length === 0) {
+                    container.innerHTML = '<p class="no-pending-comments">✅ No pending comments</p>';
+                    return;
+                }
+
+                // Sort by timestamp (newest first)
+                pendingComments.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+                container.innerHTML = pendingComments.map(comment => {
+                    const date = new Date(comment.timestamp);
+                    const formattedDate = date.toLocaleString('en-US', { 
+                        year: 'numeric', 
+                        month: 'short', 
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+
+                    return `
+                        <div class="comment-item-admin">
+                            <div class="comment-header-admin">
+                                <div class="comment-info">
+                                    <strong>${escapeHtml(comment.name)}</strong>
+                                    <small>Memorial: ${comment.memorialId} • ${formattedDate}</small>
+                                    ${comment.email ? `<br><small>Email: ${escapeHtml(comment.email)}</small>` : ''}
+                                </div>
+                            </div>
+                            <div class="comment-text-admin">${escapeHtml(comment.comment)}</div>
+                            <div class="comment-actions">
+                                <button class="btn-approve" onclick="manageComment('${comment.id}', 'approve')">✅ Approve</button>
+                                <button class="btn-reject" onclick="manageComment('${comment.id}', 'reject')">⚠️ Reject</button>
+                                <button class="btn-delete-comment" onclick="manageComment('${comment.id}', 'delete')">🗑️ Delete</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (error) {
+                console.error('Error loading comments:', error);
+                container.innerHTML = '<p class="error">Failed to load comments</p>';
+            }
+        }
+
+        async function manageComment(commentId, action) {
+            if (!confirm(`Are you sure you want to ${action} this comment?`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/manage-comments', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        commentId,
+                        action,
+                        password: adminPassword
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showMessage(`✅ Comment ${action}d successfully!`, 'success');
+                    loadPendingComments(); // Reload the list
+                } else {
+                    throw new Error(result.error || 'Failed to manage comment');
+                }
+            } catch (error) {
+                console.error('Error managing comment:', error);
+                showMessage(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
     </script>
 </body>
 </html>
