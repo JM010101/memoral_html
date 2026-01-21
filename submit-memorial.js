@@ -104,21 +104,22 @@ document.getElementById('submissionForm').addEventListener('submit', async (e) =
             // Create Stripe payment link with memorial ID
             const paymentUrl = `https://buy.stripe.com/test_payment_link?client_reference_id=${result.memorialId}`;
             
-            // For now, show success message with manual payment instructions
+            // Show success message with payment instructions
             messageDiv.innerHTML = `
                 <div class="success-message" style="padding: 2rem; text-align: center;">
                     <h3 style="color: #10b981; margin-bottom: 1rem;">✅ Memorial Submitted Successfully!</h3>
                     <p style="margin-bottom: 1rem;">Your memorial submission has been received.</p>
                     <p style="margin-bottom: 1.5rem;"><strong>Submission ID:</strong> ${result.memorialId}</p>
-                    <p style="margin-bottom: 1.5rem;">Please complete payment to finalize your submission:</p>
+                    <p style="margin-bottom: 1.5rem;">Please complete payment to finalize your submission.<br>
+                    <strong>Select quantity of $2 donations to reach $50 total</strong></p>
                     <a href="https://buy.stripe.com/4gM3cvcGo9Dn1hYbEieIw0c" 
                        target="_blank"
                        class="btn-primary" 
                        style="display: inline-block; padding: 1rem 2rem; text-decoration: none; font-size: 1.1rem;">
-                        💳 Complete Payment ($50)
+                        💳 Complete Payment (Select qty: 25 for $50)
                     </a>
                     <p style="margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-light);">
-                        After payment, your memorial will be reviewed and published within 24-48 hours.
+                        After payment, your memorial will be reviewed and published within 24-48 hours.<br>
                         You'll receive an email confirmation at <strong>${submissionData.submitterEmail}</strong>
                     </p>
                 </div>
