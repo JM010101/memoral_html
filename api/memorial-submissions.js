@@ -1,4 +1,4 @@
-// API endpoint for public memorial submissions
+// Consolidated API for public memorial submissions and management
 import { createClient } from '@supabase/supabase-js';
 
 export default async function handler(req, res) {
@@ -14,10 +14,26 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
+    const { action } = req.body;
+
+    // PUBLIC SUBMISSION
+    if (action === 'submit') {
+        return await handlePublicSubmission(req, res);
+    }
+
+    // ADMIN MANAGEMENT (approve/reject/bypass)
+    if (action === 'approve' || action === 'reject' || action === 'bypass') {
+        return await handleManageSubmission(req, res);
+    }
+
+    return res.status(400).json({ error: 'Invalid action' });
+}
+
+// Handle public memorial submission
+async function handlePublicSubmission(req, res) {
     try {
         const { submitterName, submitterEmail, name, lastName, birthYear, deathYear, grade12Year, tribute, photos, recaptchaToken } = req.body;
 
-        // Validate required fields
         if (!submitterName || !submitterEmail || !name || !lastName || !birthYear || !deathYear || !tribute || !photos || photos.length === 0) {
             return res.status(400).json({ error: 'Missing required fields' });
         }
@@ -37,13 +53,11 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: 'reCAPTCHA verification failed' });
         }
 
-        // Initialize Supabase with service role key
         const supabase = createClient(
             process.env.SUPABASE_URL,
             process.env.SUPABASE_SERVICE_KEY
         );
 
-        // Generate memorial ID
         const memorialId = `${lastName.toLowerCase().replace(/[^a-z]/g, '')}-${name.toLowerCase().replace(/[^a-z]/g, '').substring(0, 10)}-${Date.now()}`;
 
         // Upload photos
@@ -107,6 +121,63 @@ export default async function handler(req, res) {
 
     } catch (error) {
         console.error('Submission error:', error);
+        return res.status(500).json({ error: error.message });
+    }
+}
+
+// Handle admin approval/rejection/bypass
+async function handleManageSubmission(req, res) {
+    try {
+        const { memorialId, action } = req.body;
+
+        if (!memorialId || !action) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+
+        const supabase = createClient(
+            process.env.SUPABASE_URL,
+            process.env.SUPABASE_SERVICE_KEY
+        );
+
+        let updateData = {};
+
+        switch (action) {
+            case 'approve':
+                updateData = { status: 'approved' };
+                break;
+            case 'bypass':
+                updateData = { 
+                    status: 'approved',
+                    payment_status: 'bypassed'
+                };
+                break;
+            case 'reject':
+                updateData = { status: 'rejected' };
+                break;
+            default:
+                return res.status(400).json({ error: 'Invalid action' });
+        }
+
+        const { data, error } = await supabase
+            .from('memorials')
+            .update(updateData)
+            .eq('id', memorialId)
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Database error:', error);
+            throw new Error('Failed to update memorial status');
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: `Memorial ${action}ed successfully`,
+            memorial: data
+        });
+
+    } catch (error) {
+        console.error('Manage submission error:', error);
         return res.status(500).json({ error: error.message });
     }
 }

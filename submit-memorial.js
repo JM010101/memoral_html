@@ -85,10 +85,13 @@ document.getElementById('submissionForm').addEventListener('submit', async (e) =
         submitBtn.textContent = 'Uploading photos...';
         
         // Submit to API
-        const response = await fetch('/api/submit-memorial-public', {
+        const response = await fetch('/api/memorial-submissions', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(submissionData)
+            body: JSON.stringify({
+                action: 'submit',
+                ...submissionData
+            })
         });
         
         const result = await response.json();

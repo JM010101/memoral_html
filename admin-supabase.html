@@ -1164,12 +1164,12 @@
             if (!confirm('Approve this memorial submission? It will appear on the public site.')) return;
 
             try {
-                const response = await fetch('/api/manage-submission', {
+                const response = await fetch('/api/memorial-submissions', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        memorialId: id,
-                        action: 'approve'
+                        action: 'approve',
+                        memorialId: id
                     })
                 });
 
@@ -1187,12 +1187,12 @@
             if (!confirm('Bypass payment requirement and approve this memorial?')) return;
 
             try {
-                const response = await fetch('/api/manage-submission', {
+                const response = await fetch('/api/memorial-submissions', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        memorialId: id,
-                        action: 'bypass'
+                        action: 'bypass',
+                        memorialId: id
                     })
                 });
 
@@ -1210,12 +1210,12 @@
             if (!confirm('Reject this memorial submission? This action cannot be undone.')) return;
 
             try {
-                const response = await fetch('/api/manage-submission', {
+                const response = await fetch('/api/memorial-submissions', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        memorialId: id,
-                        action: 'reject'
+                        action: 'reject',
+                        memorialId: id
                     })
                 });
 
