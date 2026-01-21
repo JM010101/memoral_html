@@ -446,8 +446,8 @@ function setupSearch() {
                 searchResults.textContent = 'No memorials found';
             } else {
                 const filters = [];
-                if (query) filters.push(`name: "${query}"`);
-                if (year) filters.push(`year: ${year}`);
+                if (query) filters.push(`last name: "${query}"`);
+                if (year) filters.push(`Grade 12: ${year}`);
                 const filterText = filters.length > 0 ? ` (${filters.join(', ')})` : '';
                 searchResults.textContent = `Found ${filtered.length} memorial${filtered.length === 1 ? '' : 's'}${filterText}`;
             }
