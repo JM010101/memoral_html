@@ -21,7 +21,7 @@ export default async function handler(req, res) {
                 .order('created_at', { ascending: false });
 
             if (error) throw error;
-            return res.status(200).json(data);
+            return res.status(200).json({ success: true, memorials: data });
         }
 
         // Get single memorial by ID
@@ -45,12 +45,12 @@ export default async function handler(req, res) {
                 .order('created_at', { ascending: false });
 
             if (error) throw error;
-            return res.status(200).json({ comments: data });
+            return res.status(200).json({ success: true, comments: data });
         }
 
-        return res.status(400).json({ message: 'Invalid type parameter' });
+        return res.status(400).json({ success: false, message: 'Invalid type parameter' });
     } catch (error) {
         console.error(`Error fetching admin data (${type}):`, error);
-        return res.status(500).json({ message: `Failed to fetch ${type}`, error: error.message });
+        return res.status(500).json({ success: false, message: `Failed to fetch ${type}`, error: error.message });
     }
 }
