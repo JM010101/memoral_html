@@ -484,7 +484,6 @@
                         </p>
                     </div>
                     <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                        <button onclick="viewSubmission('${memorial.id}')" class="btn-secondary" style="background: #3b82f6;">👁️ View</button>
                         <button onclick="approveSubmission('${memorial.id}')" class="btn-secondary" style="background: #10b981;">✅ Approve</button>
                         <button onclick="bypassPayment('${memorial.id}')" class="btn-secondary" style="background: #f59e0b;">💰 Bypass Payment</button>
                         <button onclick="rejectSubmission('${memorial.id}')" class="btn-secondary" style="background: #dc2626;">❌ Reject</button>
@@ -1156,10 +1155,6 @@
 
         // ========== SUBMISSION APPROVAL FUNCTIONS ==========
         
-        function viewSubmission(id) {
-            editMemorial(id);
-        }
-
         async function approveSubmission(id) {
             if (!confirm('Approve this memorial submission? It will appear on the public site.')) return;
 
