@@ -32,8 +32,8 @@ body {
 
 /* Navigation */
 .navbar {
-    background-color: #f5f5cb;
-    color: #333;
+    background-color: #0313fc;
+    color: white;
     padding: 1rem 0;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
@@ -50,7 +50,7 @@ body {
 .logo {
     font-size: 1.5rem;
     font-weight: 600;
-    color: #333;
+    color: white;
     text-decoration: none;
     letter-spacing: 1px;
     display: flex;
@@ -62,7 +62,7 @@ body {
     width: 50px;
     height: 50px;
     object-fit: contain;
-    filter: none;
+    filter: brightness(0) invert(1);
 }
 
 .nav-menu {
@@ -72,7 +72,7 @@ body {
 }
 
 .nav-menu a {
-    color: #333;
+    color: white;
     text-decoration: none;
     transition: opacity 0.3s;
 }
@@ -635,7 +635,7 @@ textarea,
 input[type="text"],
 input[type="email"],
 input[type="search"] {
-    background-color: #fffef8;
+    background-color: #ffffee;
 }
 
 /* Utilities */
@@ -667,8 +667,8 @@ input[type="search"] {
 /* Footer */
 footer {
     margin-top: auto;
-    background-color: #f5f5cb;
-    color: #333;
+    background-color: #0313fc;
+    color: white;
     padding: var(--spacing) var(--spacing);
     text-align: center;
 }
