@@ -102,12 +102,6 @@ document.getElementById('submissionForm').addEventListener('submit', async (e) =
     const messageDiv = document.getElementById('formMessage');
     const submitBtn = document.getElementById('submitBtn');
     
-    // Validate photos
-    if (selectedPhotos.length === 0) {
-        messageDiv.innerHTML = '<p class="error-message">❌ Please add at least 1 photo</p>';
-        return;
-    }
-    
     // Verify reCAPTCHA
     const recaptchaResponse = grecaptcha.getResponse();
     if (!recaptchaResponse) {
