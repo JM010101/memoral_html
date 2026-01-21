@@ -295,7 +295,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Photos (up to 5):</label>
+                    <label>Photos (Optional - up to 5):</label>
                     <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
                         <p>📷 Click to upload photos</p>
                         <small>JPG, PNG, or AVIF • Max 5MB each</small>
@@ -564,11 +564,6 @@
 
         document.getElementById('memorialForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
-            if (currentPhotos.length === 0) {
-                showMessage('Please add at least one photo', 'error');
-                return;
-            }
 
             if (currentPhotos.length > 5) {
                 showMessage('Maximum 5 photos allowed', 'error');
