@@ -33,7 +33,7 @@ export default async function handler(req, res) {
                 .single();
 
             if (error) throw error;
-            return res.status(200).json(data);
+            return res.status(200).json({ success: true, memorial: data });
         }
 
         // Get pending comments
