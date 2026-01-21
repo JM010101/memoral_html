@@ -468,8 +468,8 @@
             container.innerHTML = memorials.map(memorial => `
                 <div class="memorial-item">
                     <div>
-                        <h3>${memorial.name}</h3>
-                        <p>${memorial.birth_date || '?'} - ${memorial.death_date || '?'}</p>
+                        <h3>${memorial.name}${memorial.last_name ? ` (${memorial.last_name})` : ''}</h3>
+                        <p>${memorial.birth_date || '?'} - ${memorial.death_date || '?'}${memorial.grade_12_year ? ` • Class of ${memorial.grade_12_year}` : ''}</p>
                     </div>
                     <div class="memorial-actions">
                         <button class="btn-edit" onclick="editMemorial('${memorial.id}')">Edit</button>
