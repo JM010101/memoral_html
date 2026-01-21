@@ -272,6 +272,12 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="lastName">Last Name:</label>
+                    <input type="text" id="lastName" required>
+                    <small style="color: var(--text-light);">For search functionality</small>
+                </div>
+
+                <div class="form-group">
                     <label for="birthDate">Birth Date:</label>
                     <input type="date" id="birthDate" required>
                 </div>
@@ -571,6 +577,7 @@
                 const memorial = {
                     id: document.getElementById('memorialId').value,
                     name: document.getElementById('name').value,
+                    last_name: document.getElementById('lastName').value,
                     birthDate: document.getElementById('birthDate').value,
                     deathDate: document.getElementById('deathDate').value,
                     grade_12_year: document.getElementById('grade12Year').value ? parseInt(document.getElementById('grade12Year').value) : null,
@@ -649,6 +656,7 @@
             document.getElementById('memorialId').value = data.id;
             document.getElementById('memorialId').disabled = true;
             document.getElementById('name').value = data.name;
+            document.getElementById('lastName').value = data.last_name || '';
             document.getElementById('birthDate').value = data.birth_date;
             document.getElementById('deathDate').value = data.death_date;
             document.getElementById('grade12Year').value = data.grade_12_year || '';

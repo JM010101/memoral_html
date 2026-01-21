@@ -30,6 +30,7 @@ async function loadMemorialsData() {
         memorialsData = data.map(memorial => ({
             id: memorial.id,
             name: memorial.name,
+            last_name: memorial.last_name,
             birthDate: memorial.birth_date,
             deathDate: memorial.death_date,
             grade_12_year: memorial.grade_12_year,
@@ -423,11 +424,14 @@ function setupSearch() {
             let nameMatch = true;
             let yearMatch = true;
 
-            // Filter by name/tribute if query is provided
+            // Filter by LAST NAME ONLY if query is provided
             if (query !== '') {
-                nameMatch = memorial.name.toLowerCase().includes(query);
-                const tributeMatch = memorial.tribute && memorial.tribute.toLowerCase().includes(query);
-                nameMatch = nameMatch || tributeMatch;
+                if (memorial.last_name) {
+                    nameMatch = memorial.last_name.toLowerCase().includes(query);
+                } else {
+                    // Fallback: if no last_name field, search in full name
+                    nameMatch = memorial.name.toLowerCase().includes(query);
+                }
             }
 
             // Filter by Grade 12 year if provided
