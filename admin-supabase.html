@@ -296,7 +296,7 @@
                     <div id="photoPreview" class="photo-preview"></div>
                 </div>
 
-                <button type="submit" class="btn-primary" id="submitBtn">⚡ Save Memorial (Instant!)</button>
+                <button type="submit" class="btn-primary" id="submitBtn">⚡ Save Memorial</button>
             </form>
 
             <div class="memorial-list">
@@ -515,7 +515,7 @@
                 showMessage('❌ Error: ' + error.message, 'error');
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.textContent = '⚡ Save Memorial (Instant!)';
+                submitBtn.textContent = '⚡ Save Memorial';
             }
         });
 
@@ -583,7 +583,7 @@
             currentPhotos = [];
             editingId = null;
             displayPhotos();
-            document.getElementById('submitBtn').textContent = '⚡ Save Memorial (Instant!)';
+            document.getElementById('submitBtn').textContent = '⚡ Save Memorial';
         }
 
         async function loadPendingComments() {
