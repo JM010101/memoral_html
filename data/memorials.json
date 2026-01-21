@@ -51,6 +51,19 @@
           "alt": "Photo of Jack Black"
         }
       ]
+    },
+    {
+      "id": "fallen-gator",
+      "name": "Fallen Gator",
+      "birthDate": "1975-06-10",
+      "deathDate": "2026-01-20",
+      "tribute": "This is fallen gator testing.",
+      "photos": [
+        {
+          "url": "images/fallen-gator-1768960634008-0.jpg",
+          "alt": "Photo of Fallen Gator"
+        }
+      ]
     }
   ]
 }
