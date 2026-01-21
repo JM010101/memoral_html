@@ -158,7 +158,7 @@ function createMemorialCard(memorial) {
         
         // Skip placeholder or invalid URLs
         if (photoUrl && !photoUrl.includes('placeholder.com')) {
-            image.src = photoUrl;
+            image.src = getProxiedImageUrl(photoUrl);
             image.alt = typeof photo === 'string' ? `${memorial.name} memorial photo` : photo.alt;
             image.className = 'memorial-card-image';
             image.loading = 'lazy';
@@ -248,9 +248,10 @@ function loadMemorialPage() {
             
             validPhotos.forEach((photo, index) => {
                 const photoUrl = typeof photo === 'string' ? photo : photo.url;
+                const proxiedUrl = getProxiedImageUrl(photoUrl);
                 const photoAlt = typeof photo === 'string' ? `Photo ${index + 1} of ${escapeHtml(memorial.name)}` : escapeHtml(photo.alt);
                 html += `<div class="gallery-item" data-index="${index}">`;
-                html += `<img src="${escapeHtml(photoUrl)}" alt="${photoAlt}" loading="lazy" decoding="async" onerror="this.parentElement.style.display='none'">`;
+                html += `<img src="${escapeHtml(proxiedUrl)}" alt="${photoAlt}" loading="lazy" decoding="async" onerror="this.parentElement.style.display='none'">`;
                 html += '</div>';
             });
             
@@ -528,4 +529,23 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+// Convert Supabase Storage URLs to proxied URLs (fixes connectivity issues)
+function getProxiedImageUrl(url) {
+    if (!url) return url;
+    
+    // If it's already a proxied URL, return as is
+    if (url.startsWith('/api/get-image')) {
+        return url;
+    }
+    
+    // If it's a Supabase Storage URL, convert to proxied URL
+    if (url.includes('supabase.co/storage/v1/object/public/memorial-images/')) {
+        const filename = url.split('/memorial-images/').pop();
+        return `/api/get-image?filename=${filename}`;
+    }
+    
+    // For other URLs (external images), return as is
+    return url;
 }
