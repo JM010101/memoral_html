@@ -562,7 +562,7 @@ function getProxiedImageUrl(url) {
 // Load and display partners
 async function loadPartners() {
     try {
-        const response = await fetch('/api/get-partners');
+        const response = await fetch('/api/partners');
         if (!response.ok) {
             throw new Error('Failed to fetch partners');
         }
@@ -604,7 +604,7 @@ function displayPartners(partners) {
 // Load and display beneficiaries
 async function loadBeneficiaries() {
     try {
-        const response = await fetch('/api/get-beneficiaries');
+        const response = await fetch('/api/beneficiaries');
         if (!response.ok) {
             throw new Error('Failed to fetch beneficiaries');
         }
