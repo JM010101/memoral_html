@@ -353,14 +353,17 @@
 
         async function loadMemorials() {
             try {
-                const { data, error } = await supabaseClient
-                    .from('memorials')
-                    .select('*')
-                    .order('created_at', { ascending: false });
+                const response = await fetch(`/api/admin-get-memorials?password=${encodeURIComponent(adminPassword)}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch memorials');
+                }
 
-                if (error) throw error;
+                const result = await response.json();
+                if (!result.success) {
+                    throw new Error(result.error || 'Failed to load memorials');
+                }
 
-                displayMemorialsList(data || []);
+                displayMemorialsList(result.memorials || []);
             } catch (error) {
                 console.error('Error loading memorials:', error);
                 showMessage('Error loading memorials', 'error');
@@ -546,16 +549,18 @@
         }
 
         async function editMemorial(id) {
-            const { data, error } = await supabaseClient
-                .from('memorials')
-                .select('*')
-                .eq('id', id)
-                .single();
+            try {
+                const response = await fetch(`/api/admin-get-memorial?password=${encodeURIComponent(adminPassword)}&id=${encodeURIComponent(id)}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch memorial');
+                }
 
-            if (error || !data) {
-                showMessage('Error loading memorial', 'error');
-                return;
-            }
+                const result = await response.json();
+                if (!result.success || !result.memorial) {
+                    throw new Error('Memorial not found');
+                }
+
+                const data = result.memorial;
 
             editingId = id;
             document.getElementById('memorialId').value = data.id;
@@ -565,10 +570,14 @@
             document.getElementById('deathDate').value = data.death_date;
             document.getElementById('tribute').value = data.tribute;
             
-            currentPhotos = [];
-            showMessage('Editing memorial. Re-upload photos.', 'success');
-            document.getElementById('submitBtn').textContent = '⚡ Update Memorial';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+                currentPhotos = [];
+                showMessage('Editing memorial. Re-upload photos.', 'success');
+                document.getElementById('submitBtn').textContent = '⚡ Update Memorial';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } catch (error) {
+                console.error('Error editing memorial:', error);
+                showMessage('Error loading memorial', 'error');
+            }
         }
 
         function clearForm() {
@@ -582,15 +591,17 @@
 
         async function loadPendingComments() {
             try {
-                const { data, error } = await supabaseClient
-                    .from('comments')
-                    .select('*')
-                    .eq('status', 'pending')
-                    .order('created_at', { ascending: false });
+                const response = await fetch(`/api/admin-get-pending-comments?password=${encodeURIComponent(adminPassword)}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch comments');
+                }
 
-                if (error) throw error;
+                const result = await response.json();
+                if (!result.success) {
+                    throw new Error(result.error || 'Failed to load comments');
+                }
 
-                displayPendingComments(data || []);
+                displayPendingComments(result.comments || []);
             } catch (error) {
                 console.error('Error loading comments:', error);
                 document.getElementById('pendingCommentsList').innerHTML = '<p class="error">Failed to load comments</p>';
