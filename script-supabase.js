@@ -297,7 +297,7 @@ function loadMemorialPage() {
     html += '<textarea id="commentText" required maxlength="1000" rows="4"></textarea>';
     html += '</div>';
     html += '<div class="form-group">';
-    html += '<div class="g-recaptcha" data-sitekey="6LfYour_Site_Key_Here"></div>';
+    html += '<div class="g-recaptcha" data-sitekey="6Le1M1IsAAAAAGqg6pAMi1n-jYt8GznU0lwdW5gJ"></div>';
     html += '<small style="color: var(--text-light); margin-top: 0.5rem; display: block;">Please complete the reCAPTCHA to submit your comment</small>';
     html += '</div>';
     html += '<button type="submit" class="btn btn-primary">Submit Comment</button>';
