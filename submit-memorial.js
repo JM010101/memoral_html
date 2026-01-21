@@ -97,44 +97,23 @@ document.getElementById('submissionForm').addEventListener('submit', async (e) =
         const result = await response.json();
         
         if (response.ok) {
-            // Redirect to Stripe payment
-            submitBtn.textContent = 'Redirecting to payment...';
-            messageDiv.innerHTML = '<p class="success-message">✅ Submission received! Redirecting to payment...</p>';
-            
-            // Create Stripe payment link with memorial ID
-            const paymentUrl = `https://buy.stripe.com/test_payment_link?client_reference_id=${result.memorialId}`;
-            
-            // Show success message with payment instructions
+            // Show success message
+            submitBtn.textContent = '✅ Submitted';
+            submitBtn.disabled = true;
             messageDiv.innerHTML = `
-                <div class="success-message" style="padding: 2rem; text-align: center;">
-                    <h3 style="color: #10b981; margin-bottom: 1rem;">✅ Memorial Submitted Successfully!</h3>
-                    <p style="margin-bottom: 1rem;">Your memorial submission has been received.</p>
-                    <p style="margin-bottom: 1.5rem;"><strong>Submission ID:</strong> ${result.memorialId}</p>
-                    <p style="margin-bottom: 1.5rem;">Please complete payment to finalize your submission.<br>
-                    <strong>Select quantity of $2 donations to reach $50 total</strong></p>
-                    <div style="display: flex; gap: 1rem; justify-content: center; align-items: center; flex-wrap: wrap; margin-bottom: 1.5rem;">
-                        <button onclick="window.location.href='index.html'" 
-                                class="btn-secondary" 
-                                style="padding: 1rem 2rem; font-size: 1.1rem; background: #6b7280; color: white; border: none; border-radius: 8px; cursor: pointer;">
-                            ⏭️ Skip Payment
-                        </button>
-                        <a href="https://buy.stripe.com/4gM3cvcGo9Dn1hYbEieIw0c" 
-                           target="_blank"
-                           class="btn-primary" 
-                           style="display: inline-block; padding: 1rem 2rem; text-decoration: none; font-size: 1.1rem;">
-                            💳 Complete Payment (Select qty: 25 for $50)
-                        </a>
-                    </div>
-                    <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-light);">
-                        After payment, your memorial will be reviewed and published within 24-48 hours.<br>
-                        You'll receive an email confirmation at <strong>${submissionData.submitterEmail}</strong><br>
-                        <em style="margin-top: 0.5rem; display: block;">Note: Submissions without payment may take longer to review.</em>
-                    </p>
+                <div class="success-message" style="padding: 1.5rem; text-align: center; background: #d1fae5; border-radius: 8px;">
+                    <h3 style="color: #10b981; margin-bottom: 0.5rem;">✅ Memorial Submitted Successfully!</h3>
+                    <p style="margin-bottom: 0.5rem;"><strong>Submission ID:</strong> ${result.memorialId}</p>
+                    <p style="font-size: 0.95rem;">Your memorial will be reviewed and published within 24-48 hours.</p>
+                    <p style="font-size: 0.95rem; margin-top: 0.5rem;">You'll receive an email confirmation at <strong>${submissionData.submitterEmail}</strong></p>
                 </div>
             `;
             
-            // Hide form
-            document.getElementById('submissionForm').style.display = 'none';
+            // Disable form inputs
+            document.querySelectorAll('#submissionForm input, #submissionForm textarea, #submissionForm button[type="submit"]').forEach(el => {
+                el.disabled = true;
+            });
+            
             window.scrollTo({ top: 0, behavior: 'smooth' });
             
         } else {
@@ -145,7 +124,7 @@ document.getElementById('submissionForm').addEventListener('submit', async (e) =
         console.error('Submission error:', error);
         messageDiv.innerHTML = `<p class="error-message">❌ Error: ${error.message}</p>`;
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Continue to Payment ($50)';
+        submitBtn.textContent = 'Submit Memorial';
         grecaptcha.reset();
     }
 });

@@ -187,8 +187,28 @@
                 <div id="formMessage" style="margin: 1.5rem 0;"></div>
 
                 <button type="submit" id="submitBtn" class="btn-primary" style="width: 100%; padding: 1rem; font-size: 1.1rem;">
-                    Continue to Payment ($50)
+                    Submit Memorial
                 </button>
+                
+                <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 2px solid var(--border-color);">
+                    <p style="text-align: center; margin-bottom: 1rem; font-weight: 500;">After submission, complete payment:</p>
+                    <div style="display: flex; gap: 1rem; justify-content: center; align-items: center; flex-wrap: wrap;">
+                        <button type="button" onclick="window.location.href='index.html'" 
+                                class="btn-secondary" 
+                                style="padding: 1rem 2rem; font-size: 1.1rem;">
+                            ⏭️ Skip Payment
+                        </button>
+                        <a href="https://buy.stripe.com/4gM3cvcGo9Dn1hYbEieIw0c" 
+                           target="_blank"
+                           class="btn-primary" 
+                           style="display: inline-block; padding: 1rem 2rem; text-decoration: none; font-size: 1.1rem;">
+                            💳 Complete Payment (Select qty: 25 for $50)
+                        </a>
+                    </div>
+                    <p style="text-align: center; margin-top: 1rem; font-size: 0.9rem; color: var(--text-light);">
+                        <em>Note: Submissions without payment may take longer to review.</em>
+                    </p>
+                </div>
             </form>
         </div>
     </main>
