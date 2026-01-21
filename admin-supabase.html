@@ -307,8 +307,13 @@
                 <button type="submit" class="btn-primary" id="submitBtn">⚡ Save Memorial</button>
             </form>
 
+            <div class="memorial-list" style="border-top: 3px solid #f59e0b; padding-top: 2rem; margin-top: 2rem;">
+                <h2>📋 Pending Submissions (Awaiting Approval)</h2>
+                <div id="pendingSubmissionsList">Loading...</div>
+            </div>
+
             <div class="memorial-list">
-                <h2>Existing Memorials</h2>
+                <h2>✅ Approved Memorials</h2>
                 <div id="memorialsList">Loading...</div>
             </div>
 
@@ -447,11 +452,45 @@
                     throw new Error(result.error || 'Failed to load memorials');
                 }
 
-                displayMemorialsList(result.memorials || []);
+                const allMemorials = result.memorials || [];
+                const pending = allMemorials.filter(m => m.status === 'pending');
+                const approved = allMemorials.filter(m => m.status === 'approved');
+                
+                displayPendingSubmissions(pending);
+                displayMemorialsList(approved);
             } catch (error) {
                 console.error('Error loading memorials:', error);
                 showMessage('Error loading memorials', 'error');
             }
+        }
+
+        function displayPendingSubmissions(submissions) {
+            const container = document.getElementById('pendingSubmissionsList');
+            
+            if (submissions.length === 0) {
+                container.innerHTML = '<p style="text-align: center; padding: 2rem; color: var(--text-light);">✅ No pending submissions</p>';
+                return;
+            }
+
+            container.innerHTML = submissions.map(memorial => `
+                <div class="memorial-item" style="border-left: 4px solid #f59e0b; background: rgba(245, 158, 11, 0.05);">
+                    <div style="flex: 1;">
+                        <h3>${memorial.name}${memorial.last_name ? ` (${memorial.last_name})` : ''}</h3>
+                        <p>${memorial.birth_year || '?'} - ${memorial.death_year || '?'}${memorial.grade_12_year ? ` • Class of ${memorial.grade_12_year}` : ''}</p>
+                        <p style="font-size: 0.9rem; color: var(--text-light); margin-top: 0.5rem;">
+                            <strong>Submitted by:</strong> ${memorial.submitter_name} (${memorial.submitter_email})<br>
+                            <strong>Payment:</strong> <span style="color: ${memorial.payment_status === 'paid' ? '#10b981' : '#dc2626'};">${memorial.payment_status}</span><br>
+                            <strong>Date:</strong> ${new Date(memorial.submission_date || memorial.created_at).toLocaleDateString()}
+                        </p>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <button onclick="viewSubmission('${memorial.id}')" class="btn-secondary" style="background: #3b82f6;">👁️ View</button>
+                        <button onclick="approveSubmission('${memorial.id}')" class="btn-secondary" style="background: #10b981;">✅ Approve</button>
+                        <button onclick="bypassPayment('${memorial.id}')" class="btn-secondary" style="background: #f59e0b;">💰 Bypass Payment</button>
+                        <button onclick="rejectSubmission('${memorial.id}')" class="btn-secondary" style="background: #dc2626;">❌ Reject</button>
+                    </div>
+                </div>
+            `).join('');
         }
 
         function displayMemorialsList(memorials) {
@@ -1114,6 +1153,81 @@
                 loadBeneficiaries();
             }
         };
+
+        // ========== SUBMISSION APPROVAL FUNCTIONS ==========
+        
+        function viewSubmission(id) {
+            editMemorial(id);
+        }
+
+        async function approveSubmission(id) {
+            if (!confirm('Approve this memorial submission? It will appear on the public site.')) return;
+
+            try {
+                const response = await fetch('/api/manage-submission', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        memorialId: id,
+                        action: 'approve'
+                    })
+                });
+
+                if (!response.ok) throw new Error('Failed to approve submission');
+
+                showMessage('✅ Memorial approved and published!', 'success');
+                loadMemorials();
+            } catch (error) {
+                console.error('Error approving submission:', error);
+                showMessage('❌ Failed to approve submission', 'error');
+            }
+        }
+
+        async function bypassPayment(id) {
+            if (!confirm('Bypass payment requirement and approve this memorial?')) return;
+
+            try {
+                const response = await fetch('/api/manage-submission', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        memorialId: id,
+                        action: 'bypass'
+                    })
+                });
+
+                if (!response.ok) throw new Error('Failed to bypass payment');
+
+                showMessage('✅ Payment bypassed and memorial approved!', 'success');
+                loadMemorials();
+            } catch (error) {
+                console.error('Error bypassing payment:', error);
+                showMessage('❌ Failed to bypass payment', 'error');
+            }
+        }
+
+        async function rejectSubmission(id) {
+            if (!confirm('Reject this memorial submission? This action cannot be undone.')) return;
+
+            try {
+                const response = await fetch('/api/manage-submission', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        memorialId: id,
+                        action: 'reject'
+                    })
+                });
+
+                if (!response.ok) throw new Error('Failed to reject submission');
+
+                showMessage('✅ Submission rejected', 'success');
+                loadMemorials();
+            } catch (error) {
+                console.error('Error rejecting submission:', error);
+                showMessage('❌ Failed to reject submission', 'error');
+            }
+        }
     </script>
 </body>
 </html>

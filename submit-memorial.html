@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Submit a memorial to Fallen Gators Registry">
+    <title>Submit a Memorial - Fallen Gators Registry</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <style>
+        .submission-container {
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .submission-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 3px solid var(--primary-color);
+        }
+        
+        .submission-header h1 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .info-box {
+            background: rgba(3, 19, 252, 0.05);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+            margin: 2rem 0;
+        }
+        
+        .info-box h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.75rem;
+        }
+        
+        .info-box ul {
+            margin-left: 1.5rem;
+            line-height: 1.8;
+        }
+        
+        .required-note {
+            color: #dc2626;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .photo-preview-item {
+            position: relative;
+            display: inline-block;
+            margin: 0.5rem;
+        }
+        
+        .photo-preview-item img {
+            max-width: 150px;
+            max-height: 150px;
+            border-radius: 8px;
+            border: 2px solid var(--border-color);
+        }
+        
+        .remove-photo-btn {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #dc2626;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <header>
+        <nav class="navbar" role="navigation" aria-label="Main navigation">
+            <div class="nav-container">
+                <a href="index.html" class="logo">
+                    <img src="images/ChatGPT Image Jan 21, 2026, 07_49_29 AM.png" alt="Logo">
+                    Fallen Gators Registry
+                </a>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="memorials.html">Memorials</a></li>
+                    <li><a href="partners.html">Partners</a></li>
+                    <li><a href="beneficiaries.html">Beneficiaries</a></li>
+                    <li><a href="contribute.html">Contribute</a></li>
+                    <li><a href="submit-memorial.html" class="active">Submit Memorial</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main id="main-content">
+        <div class="submission-container">
+            <div class="submission-header">
+                <h1>Submit a Memorial</h1>
+                <p>Honor a Fallen Gator by creating a lasting tribute</p>
+            </div>
+
+            <div class="info-box">
+                <h3>📋 Submission Process</h3>
+                <ul>
+                    <li>Fill out the memorial information below</li>
+                    <li>Add up to 5 photos</li>
+                    <li>Complete payment ($50 memorial fee)</li>
+                    <li>Your submission will be reviewed by our team</li>
+                    <li>Once approved, the memorial will appear on the site</li>
+                </ul>
+            </div>
+
+            <p class="required-note">* Required fields</p>
+
+            <form id="submissionForm">
+                <div class="form-group">
+                    <label for="yourName">Your Name *</label>
+                    <input type="text" id="yourName" required maxlength="100">
+                    <small>We'll contact you about your submission</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="yourEmail">Your Email *</label>
+                    <input type="email" id="yourEmail" required maxlength="100">
+                    <small>For submission updates and approval notification</small>
+                </div>
+
+                <hr style="margin: 2rem 0; border: none; border-top: 2px solid var(--border-color);">
+
+                <h3 style="color: var(--primary-color); margin-bottom: 1.5rem;">Memorial Information</h3>
+
+                <div class="form-group">
+                    <label for="fallenGatorName">Full Name of Fallen Gator *</label>
+                    <input type="text" id="fallenGatorName" required maxlength="100">
+                </div>
+
+                <div class="form-group">
+                    <label for="lastName">Last Name *</label>
+                    <input type="text" id="lastName" required maxlength="50">
+                </div>
+
+                <div class="form-group">
+                    <label for="birthYear">Birth Year *</label>
+                    <input type="number" id="birthYear" required min="1900" max="2030" placeholder="e.g., 1965">
+                </div>
+
+                <div class="form-group">
+                    <label for="deathYear">Death Year *</label>
+                    <input type="number" id="deathYear" required min="1900" max="2030" placeholder="e.g., 2020">
+                </div>
+
+                <div class="form-group">
+                    <label for="grade12Year">Grade 12 Graduating Year</label>
+                    <input type="number" id="grade12Year" min="1950" max="2050" placeholder="e.g., 1982">
+                    <small>Optional - helps classmates find them</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="tribute">Memorial Tribute *</label>
+                    <textarea id="tribute" required rows="8" maxlength="2000" placeholder="Share memories, achievements, and what made them special..."></textarea>
+                    <small>Maximum 2000 characters</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Photos (1-5 photos required) *</label>
+                    <input type="file" id="photoInput" accept="image/*" multiple style="margin-bottom: 1rem;">
+                    <div id="photoPreview"></div>
+                    <small>JPG, PNG, WEBP • Max 5MB each • At least 1 photo required</small>
+                </div>
+
+                <div class="form-group">
+                    <div class="g-recaptcha" data-sitekey="6Le1M1IsAAAAAGqg6pAMi1n-jYt8GznU0lwdW5gJ"></div>
+                </div>
+
+                <div id="formMessage" style="margin: 1.5rem 0;"></div>
+
+                <button type="submit" id="submitBtn" class="btn-primary" style="width: 100%; padding: 1rem; font-size: 1.1rem;">
+                    Continue to Payment ($50)
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Fallen Gators Registry. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="submit-memorial.js"></script>
+</body>
+</html>
