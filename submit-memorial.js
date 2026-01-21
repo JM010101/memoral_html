@@ -112,15 +112,23 @@ document.getElementById('submissionForm').addEventListener('submit', async (e) =
                     <p style="margin-bottom: 1.5rem;"><strong>Submission ID:</strong> ${result.memorialId}</p>
                     <p style="margin-bottom: 1.5rem;">Please complete payment to finalize your submission.<br>
                     <strong>Select quantity of $2 donations to reach $50 total</strong></p>
-                    <a href="https://buy.stripe.com/4gM3cvcGo9Dn1hYbEieIw0c" 
-                       target="_blank"
-                       class="btn-primary" 
-                       style="display: inline-block; padding: 1rem 2rem; text-decoration: none; font-size: 1.1rem;">
-                        💳 Complete Payment (Select qty: 25 for $50)
-                    </a>
-                    <p style="margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-light);">
+                    <div style="display: flex; gap: 1rem; justify-content: center; align-items: center; flex-wrap: wrap; margin-bottom: 1.5rem;">
+                        <a href="https://buy.stripe.com/4gM3cvcGo9Dn1hYbEieIw0c" 
+                           target="_blank"
+                           class="btn-primary" 
+                           style="display: inline-block; padding: 1rem 2rem; text-decoration: none; font-size: 1.1rem;">
+                            💳 Complete Payment (Select qty: 25 for $50)
+                        </a>
+                        <button onclick="window.location.href='index.html'" 
+                                class="btn-secondary" 
+                                style="padding: 1rem 2rem; font-size: 1.1rem; background: #6b7280; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                            ⏭️ Skip Payment
+                        </button>
+                    </div>
+                    <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-light);">
                         After payment, your memorial will be reviewed and published within 24-48 hours.<br>
-                        You'll receive an email confirmation at <strong>${submissionData.submitterEmail}</strong>
+                        You'll receive an email confirmation at <strong>${submissionData.submitterEmail}</strong><br>
+                        <em style="margin-top: 0.5rem; display: block;">Note: Submissions without payment may take longer to review.</em>
                     </p>
                 </div>
             `;
