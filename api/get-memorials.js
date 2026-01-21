@@ -22,10 +22,11 @@ export default async function handler(req, res) {
             process.env.SUPABASE_ANON_KEY
         );
 
-        // Fetch all memorials
+        // Fetch only approved memorials for public view
         const { data, error } = await supabase
             .from('memorials')
             .select('*')
+            .eq('status', 'approved')
             .order('created_at', { ascending: false });
 
         if (error) {
