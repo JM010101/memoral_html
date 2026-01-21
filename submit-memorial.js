@@ -2,6 +2,47 @@
 
 let selectedPhotos = [];
 
+// Compress image before adding to array
+function compressImage(file, callback) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Max dimensions (reduce file size significantly)
+            let maxWidth = 1200;
+            let maxHeight = 1200;
+            let width = img.width;
+            let height = img.height;
+            
+            // Calculate new dimensions maintaining aspect ratio
+            if (width > height) {
+                if (width > maxWidth) {
+                    height = (height * maxWidth) / width;
+                    width = maxWidth;
+                }
+            } else {
+                if (height > maxHeight) {
+                    width = (width * maxHeight) / height;
+                    height = maxHeight;
+                }
+            }
+            
+            canvas.width = width;
+            canvas.height = height;
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            // Convert to JPEG with 0.8 quality (good balance of quality/size)
+            const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+            callback(compressedDataUrl);
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
 document.getElementById('photoInput').addEventListener('change', function(e) {
     const files = Array.from(e.target.files);
     
@@ -10,21 +51,23 @@ document.getElementById('photoInput').addEventListener('change', function(e) {
         return;
     }
     
+    let processedCount = 0;
     files.forEach(file => {
         if (file.size > 5 * 1024 * 1024) {
             alert(`File ${file.name} is too large. Maximum 5MB per photo.`);
             return;
         }
         
-        const reader = new FileReader();
-        reader.onload = (e) => {
+        compressImage(file, (compressedDataUrl) => {
             selectedPhotos.push({
                 file: file,
-                dataUrl: e.target.result
+                dataUrl: compressedDataUrl
             });
-            displayPhotos();
-        };
-        reader.readAsDataURL(file);
+            processedCount++;
+            if (processedCount === files.length) {
+                displayPhotos();
+            }
+        });
     });
     
     e.target.value = ''; // Reset input
