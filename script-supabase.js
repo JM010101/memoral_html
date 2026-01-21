@@ -31,8 +31,8 @@ async function loadMemorialsData() {
             id: memorial.id,
             name: memorial.name,
             last_name: memorial.last_name,
-            birthDate: memorial.birth_date,
-            deathDate: memorial.death_date,
+            birthYear: memorial.birth_year,
+            deathYear: memorial.death_year,
             grade_12_year: memorial.grade_12_year,
             tribute: memorial.tribute,
             photos: memorial.photos || []
@@ -138,8 +138,8 @@ function createMemorialCard(memorial) {
     title.textContent = memorial.name;
 
     const dates = document.createElement('p');
-    if (memorial.birthDate || memorial.deathDate) {
-        dates.textContent = formatDates(memorial.birthDate, memorial.deathDate);
+    if (memorial.birthYear || memorial.deathYear) {
+        dates.textContent = formatYears(memorial.birthYear, memorial.deathYear);
         dates.className = 'memorial-card-dates';
     }
 
@@ -188,11 +188,11 @@ function createMemorialCard(memorial) {
     return card;
 }
 
-// Format dates for display
-function formatDates(birthDate, deathDate) {
-    if (!birthDate && !deathDate) return '';
-    const birth = birthDate ? new Date(birthDate).getFullYear() : '?';
-    const death = deathDate ? new Date(deathDate).getFullYear() : 'Present';
+// Format years for display
+function formatYears(birthYear, deathYear) {
+    if (!birthYear && !deathYear) return '';
+    const birth = birthYear || '?';
+    const death = deathYear || 'Present';
     return `${birth} - ${death}`;
 }
 
@@ -229,8 +229,8 @@ function loadMemorialPage() {
     html += '<div class="memorial-hero-content">';
     html += `<h1>${escapeHtml(memorial.name)}</h1>`;
     
-    if (memorial.birthDate || memorial.deathDate) {
-        html += `<div class="memorial-dates">${formatDates(memorial.birthDate, memorial.deathDate)}</div>`;
+    if (memorial.birthYear || memorial.deathYear) {
+        html += `<div class="memorial-dates">${formatYears(memorial.birthYear, memorial.deathYear)}</div>`;
     }
     
     if (memorial.grade_12_year) {

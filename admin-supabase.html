@@ -278,13 +278,13 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="birthDate">Birth Date:</label>
-                    <input type="date" id="birthDate" required>
+                    <label for="birthYear">Birth Year:</label>
+                    <input type="number" id="birthYear" placeholder="e.g., 1965" min="1900" max="2030" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="deathDate">Death Date:</label>
-                    <input type="date" id="deathDate" required>
+                    <label for="deathYear">Death Year:</label>
+                    <input type="number" id="deathYear" placeholder="e.g., 2020" min="1900" max="2030" required>
                 </div>
 
                 <div class="form-group">
@@ -469,7 +469,7 @@
                 <div class="memorial-item">
                     <div>
                         <h3>${memorial.name}${memorial.last_name ? ` (${memorial.last_name})` : ''}</h3>
-                        <p>${memorial.birth_date || '?'} - ${memorial.death_date || '?'}${memorial.grade_12_year ? ` • Class of ${memorial.grade_12_year}` : ''}</p>
+                        <p>${memorial.birth_year || '?'} - ${memorial.death_year || '?'}${memorial.grade_12_year ? ` • Class of ${memorial.grade_12_year}` : ''}</p>
                     </div>
                     <div class="memorial-actions">
                         <button class="btn-edit" onclick="editMemorial('${memorial.id}')">Edit</button>
@@ -578,8 +578,8 @@
                     id: document.getElementById('memorialId').value,
                     name: document.getElementById('name').value,
                     last_name: document.getElementById('lastName').value,
-                    birthDate: document.getElementById('birthDate').value,
-                    deathDate: document.getElementById('deathDate').value,
+                    birth_year: document.getElementById('birthYear').value ? parseInt(document.getElementById('birthYear').value) : null,
+                    death_year: document.getElementById('deathYear').value ? parseInt(document.getElementById('deathYear').value) : null,
                     grade_12_year: document.getElementById('grade12Year').value ? parseInt(document.getElementById('grade12Year').value) : null,
                     tribute: document.getElementById('tribute').value,
                     photos: uploadedPhotos
@@ -657,8 +657,8 @@
             document.getElementById('memorialId').disabled = true;
             document.getElementById('name').value = data.name;
             document.getElementById('lastName').value = data.last_name || '';
-            document.getElementById('birthDate').value = data.birth_date;
-            document.getElementById('deathDate').value = data.death_date;
+            document.getElementById('birthYear').value = data.birth_year || '';
+            document.getElementById('deathYear').value = data.death_year || '';
             document.getElementById('grade12Year').value = data.grade_12_year || '';
             document.getElementById('tribute').value = data.tribute;
             
