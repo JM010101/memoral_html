@@ -253,17 +253,17 @@
 
                 <div class="form-group">
                     <label for="birthYear">Birth Year *</label>
-                    <input type="number" id="birthYear" required min="1900" max="2030" placeholder="e.g., 1965">
+                    <input type="text" id="birthYear" required inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="e.g., 1965">
                 </div>
 
                 <div class="form-group">
                     <label for="deathYear">Death Year *</label>
-                    <input type="number" id="deathYear" required min="1900" max="2030" placeholder="e.g., 2020">
+                    <input type="text" id="deathYear" required inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="e.g., 2020">
                 </div>
 
                 <div class="form-group">
                     <label for="grade12Year">Grade 12 Graduating Year</label>
-                    <input type="number" id="grade12Year" min="1950" max="2050" placeholder="e.g., 1982">
+                    <input type="text" id="grade12Year" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="e.g., 1982">
                     <small>Optional - helps classmates find them</small>
                 </div>
 
