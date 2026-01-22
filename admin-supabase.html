@@ -820,8 +820,15 @@
             document.getElementById('isFaculty').checked = data.is_faculty || false;
             document.getElementById('tribute').value = data.tribute;
             
-                currentPhotos = [];
-                showMessage('Editing memorial. Re-upload photos.', 'success');
+                // Load existing photos
+                currentPhotos = (data.photos || []).map(photo => ({
+                    url: photo.url,
+                    alt: photo.alt || `Photo of ${data.name}`,
+                    preview: photo.url // Use existing URL as preview
+                }));
+                displayPhotos();
+                
+                showMessage('Editing memorial. You can keep existing photos or add/remove photos.', 'success');
                 document.getElementById('submitBtn').textContent = '⚡ Update Memorial';
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             } catch (error) {
