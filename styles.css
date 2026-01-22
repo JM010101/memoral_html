@@ -333,7 +333,7 @@ body {
     object-fit: contain;
     display: block;
     transition: var(--transition);
-    background: #f5f5f5;
+    background: #FFFCD4;
 }
 
 .memorial-card:hover .memorial-card-image {
@@ -537,9 +537,10 @@ body {
 .gallery-item img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     transition: transform 0.3s;
     display: block;
+    background: #FFFCD4;
 }
 
 .gallery-item:hover img {
