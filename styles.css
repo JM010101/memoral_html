@@ -11,8 +11,8 @@
     --accent-color: #7f8c8d;
     --text-color: #333;
     --text-light: #666;
-    --bg-light: #ffffee;
-    --bg-white: #ffffee;
+    --bg-light: #FFFCD4;
+    --bg-white: #FFFCD4;
     --border-color: #e0e0e0;
     --spacing: 1rem;
     --spacing-lg: 2rem;
@@ -23,7 +23,7 @@ body {
     font-family: Arial, Verdana, sans-serif;
     line-height: 1.9;
     color: #555;
-    background-color: #ffffee;
+    background-color: #FFFCD4;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -648,7 +648,7 @@ textarea,
 input[type="text"],
 input[type="email"],
 input[type="search"] {
-    background-color: #ffffee;
+    background-color: #FFFCD4;
     border: 2px solid rgba(0,0,0,0.08);
     border-radius: 15px;
     padding: 0.8rem 1rem;
