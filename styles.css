@@ -141,14 +141,14 @@ body {
 .dropdown-menu a {
     display: block;
     padding: 0.75rem 1.5rem;
-    color: var(--text-dark);
+    color: #000000;
     text-decoration: none;
     transition: background-color 0.2s;
 }
 
 .dropdown-menu a:hover {
     background-color: rgba(3, 19, 252, 0.15);
-    color: var(--primary-color);
+    color: #000000;
     opacity: 1;
 }
 
@@ -891,13 +891,13 @@ footer {
     }
 
     .dropdown-menu a {
-        color: var(--text-dark);
+        color: #000000;
         padding: 0.5rem 1rem;
     }
 
     .dropdown-menu a:hover {
         background-color: rgba(3, 19, 252, 0.15);
-        color: var(--primary-color);
+        color: #000000;
     }
 
     .logo {
