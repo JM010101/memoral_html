@@ -187,7 +187,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 252, 212, 0.95);
     z-index: 1;
 }
 
@@ -197,7 +197,7 @@ body {
 }
 
 .page-header-memorials {
-    background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
+    background: linear-gradient(rgba(255, 252, 212, 0.95), rgba(255, 252, 212, 0.95)),
                 url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=600&fit=crop&q=80');
     background-size: cover;
     background-position: center;
