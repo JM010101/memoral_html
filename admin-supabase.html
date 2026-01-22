@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Memorial Admin - Fallen Gators Registry</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
     <style>
         .admin-container {
             max-width: 900px;
@@ -640,23 +642,36 @@
                 return;
             }
 
-            files.forEach(file => {
-                if (file.size > 5 * 1024 * 1024) {
-                    showMessage('Image too large: ' + file.name, 'error');
-                    return;
-                }
+            // Process files one at a time to show cropper for each
+            processFileUpload(files, 0);
+        }
 
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    currentPhotos.push({
-                        file: file,
-                        preview: e.target.result,
-                        alt: ''
-                    });
-                    displayPhotos();
-                };
-                reader.readAsDataURL(file);
-            });
+        function processFileUpload(files, index) {
+            if (index >= files.length) return;
+
+            const file = files[index];
+            if (file.size > 5 * 1024 * 1024) {
+                showMessage('Image too large: ' + file.name, 'error');
+                processFileUpload(files, index + 1);
+                return;
+            }
+
+            // Show cropper modal for each image
+            showCropperModal(file);
+            
+            // After cropping is done, process next file
+            const originalApplyCrop = window.applyCrop;
+            const originalSkipCrop = window.skipCrop;
+            
+            window.applyCrop = function() {
+                originalApplyCrop();
+                processFileUpload(files, index + 1);
+            };
+            
+            window.skipCrop = function() {
+                originalSkipCrop();
+                processFileUpload(files, index + 1);
+            };
         }
 
         function displayPhotos() {
@@ -1354,6 +1369,99 @@
                 showMessage('❌ Failed to reject submission', 'error');
             }
         }
+
+        // Image Cropping Modal
+        let currentCropper = null;
+        let currentFileToCrop = null;
+
+        function showCropperModal(file) {
+            currentFileToCrop = file;
+            const modal = document.getElementById('cropperModal');
+            const img = document.getElementById('cropperImage');
+            modal.style.display = 'flex';
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                img.src = e.target.result;
+                if (currentCropper) {
+                    currentCropper.destroy();
+                }
+                currentCropper = new Cropper(img, {
+                    aspectRatio: 4 / 3,
+                    viewMode: 1,
+                    autoCropArea: 0.8,
+                    responsive: true,
+                    guides: true
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function closeCropperModal() {
+            document.getElementById('cropperModal').style.display = 'none';
+            if (currentCropper) {
+                currentCropper.destroy();
+                currentCropper = null;
+            }
+            currentFileToCrop = null;
+        }
+
+        function applyCrop() {
+            if (!currentCropper || !currentFileToCrop) return;
+
+            const canvas = currentCropper.getCroppedCanvas({
+                width: 1200,
+                height: 900,
+                imageSmoothingEnabled: true,
+                imageSmoothingQuality: 'high'
+            });
+
+            canvas.toBlob((blob) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    currentPhotos.push({
+                        file: currentFileToCrop,
+                        preview: e.target.result,
+                        alt: ''
+                    });
+                    displayPhotos();
+                    closeCropperModal();
+                };
+                reader.readAsDataURL(blob);
+            }, 'image/jpeg', 0.9);
+        }
+
+        function skipCrop() {
+            if (!currentFileToCrop) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                currentPhotos.push({
+                    file: currentFileToCrop,
+                    preview: e.target.result,
+                    alt: ''
+                });
+                displayPhotos();
+                closeCropperModal();
+            };
+            reader.readAsDataURL(currentFileToCrop);
+        }
     </script>
+
+    <!-- Image Cropper Modal -->
+    <div id="cropperModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; justify-content: center; align-items: center; flex-direction: column;">
+        <div style="background: white; padding: 2rem; border-radius: 8px; max-width: 90%; max-height: 90%; display: flex; flex-direction: column; gap: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0;">Crop Image</h3>
+                <button onclick="closeCropperModal()" style="background: #dc2626; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">✕ Close</button>
+            </div>
+            <div style="max-width: 800px; max-height: 600px; overflow: auto;">
+                <img id="cropperImage" style="max-width: 100%; display: block;">
+            </div>
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <button onclick="skipCrop()" style="background: #6b7280; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer;">Skip Cropping</button>
+                <button onclick="applyCrop()" style="background: #10b981; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer;">✓ Apply Crop</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

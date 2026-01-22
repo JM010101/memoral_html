@@ -4,6 +4,7 @@ let selectedPhotos = [];
 
 // Compress image before adding to array
 function compressImage(file, callback) {
+    // Handle both File and Blob objects
     const reader = new FileReader();
     reader.onload = (e) => {
         const img = new Image();
@@ -40,8 +41,17 @@ function compressImage(file, callback) {
         };
         img.src = e.target.result;
     };
-    reader.readAsDataURL(file);
+    
+    if (file instanceof Blob) {
+        reader.readAsDataURL(file);
+    } else {
+        reader.readAsDataURL(file);
+    }
 }
+
+let currentCropper = null;
+let currentFileToCrop = null;
+let filesQueue = [];
 
 document.getElementById('photoInput').addEventListener('change', function(e) {
     const files = Array.from(e.target.files);
@@ -51,27 +61,95 @@ document.getElementById('photoInput').addEventListener('change', function(e) {
         return;
     }
     
-    let processedCount = 0;
-    files.forEach(file => {
+    filesQueue = files.filter(file => {
         if (file.size > 5 * 1024 * 1024) {
             alert(`File ${file.name} is too large. Maximum 5MB per photo.`);
-            return;
+            return false;
         }
-        
-        compressImage(file, (compressedDataUrl) => {
-            selectedPhotos.push({
-                file: file,
-                dataUrl: compressedDataUrl
-            });
-            processedCount++;
-            if (processedCount === files.length) {
-                displayPhotos();
-            }
-        });
+        return true;
     });
     
     e.target.value = ''; // Reset input
+    
+    if (filesQueue.length > 0) {
+        processNextFile();
+    }
 });
+
+function processNextFile() {
+    if (filesQueue.length === 0) return;
+    
+    const file = filesQueue.shift();
+    showCropperModal(file);
+}
+
+function showCropperModal(file) {
+    currentFileToCrop = file;
+    const modal = document.getElementById('cropperModal');
+    const img = document.getElementById('cropperImage');
+    modal.style.display = 'flex';
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        img.src = e.target.result;
+        if (currentCropper) {
+            currentCropper.destroy();
+        }
+        currentCropper = new Cropper(img, {
+            aspectRatio: 4 / 3,
+            viewMode: 1,
+            autoCropArea: 0.8,
+            responsive: true,
+            guides: true
+        });
+    };
+    reader.readAsDataURL(file);
+}
+
+function closeCropperModal() {
+    document.getElementById('cropperModal').style.display = 'none';
+    if (currentCropper) {
+        currentCropper.destroy();
+        currentCropper = null;
+    }
+    currentFileToCrop = null;
+}
+
+function applyCrop() {
+    if (!currentCropper || !currentFileToCrop) return;
+
+    const canvas = currentCropper.getCroppedCanvas({
+        width: 1200,
+        height: 900,
+        imageSmoothingEnabled: true,
+        imageSmoothingQuality: 'high'
+    });
+
+    canvas.toBlob((blob) => {
+        compressImage(blob, (compressedDataUrl) => {
+            selectedPhotos.push({
+                file: currentFileToCrop,
+                dataUrl: compressedDataUrl
+            });
+            displayPhotos();
+            closeCropperModal();
+            processNextFile();
+        });
+    }, 'image/jpeg', 0.9);
+}
+
+function skipCrop() {
+    if (!currentFileToCrop) return;
+    compressImage(currentFileToCrop, (compressedDataUrl) => {
+        selectedPhotos.push({
+            file: currentFileToCrop,
+            dataUrl: compressedDataUrl
+        });
+        displayPhotos();
+        closeCropperModal();
+        processNextFile();
+    });
+}
 
 function displayPhotos() {
     const container = document.getElementById('photoPreview');
