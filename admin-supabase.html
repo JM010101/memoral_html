@@ -102,7 +102,7 @@
             object-fit: cover;
         }
         
-        .photo-item button {
+        .photo-item button.remove-btn {
             position: absolute;
             top: 0.5rem;
             right: 0.5rem;
@@ -112,6 +112,38 @@
             border-radius: 4px;
             padding: 0.25rem 0.5rem;
             cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        .photo-item .primary-badge {
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+            background: #10b981;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .photo-item .set-primary-btn {
+            position: absolute;
+            bottom: 0.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(3, 19, 252, 0.9);
+            color: white;
+            border: none;
+            padding: 0.3rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .photo-item .set-primary-btn:hover {
+            background: rgba(3, 19, 252, 1);
         }
         
         .photo-item input {
@@ -380,6 +412,9 @@
 
                 <div class="form-group">
                     <label>Photos (Optional - up to 5):</label>
+                    <small style="display: block; margin-bottom: 0.5rem; color: var(--text-light);">
+                        <strong>First photo will be the primary display photo.</strong> Use "Set as Primary" to reorder.
+                    </small>
                     <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
                         <p>📷 Click to upload photos</p>
                         <small>JPG, PNG, or AVIF • Max 5MB each</small>
@@ -629,12 +664,20 @@
             container.innerHTML = currentPhotos.map((photo, index) => `
                 <div class="photo-item">
                     <img src="${photo.preview}" alt="Preview">
-                    <button type="button" onclick="removePhoto(${index})">×</button>
+                    ${index === 0 ? '<span class="primary-badge">PRIMARY</span>' : '<button type="button" class="set-primary-btn" onclick="setPrimaryPhoto(' + index + ')">Set as Primary</button>'}
+                    <button type="button" class="remove-btn" onclick="removePhoto(${index})">×</button>
                     <input type="text" placeholder="Photo description..." 
                            value="${photo.alt}" 
                            onchange="updateAltText(${index}, this.value)">
                 </div>
             `).join('');
+        }
+
+        function setPrimaryPhoto(index) {
+            // Move selected photo to the front of the array
+            const photo = currentPhotos.splice(index, 1)[0];
+            currentPhotos.unshift(photo);
+            displayPhotos();
         }
 
         function removePhoto(index) {
