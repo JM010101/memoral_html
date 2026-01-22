@@ -227,6 +227,83 @@
             font-weight: 600;
             margin-left: 1rem;
         }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .admin-container,
+            .login-section {
+                margin: 1rem;
+                padding: 1rem;
+            }
+
+            .admin-header {
+                margin: -1rem -1rem 1rem -1rem;
+                padding: 1rem;
+            }
+
+            .admin-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .memorial-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .memorial-item > div:last-child {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+                width: 100%;
+            }
+
+            .photo-preview {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+
+            .btn-primary,
+            .btn-edit,
+            .btn-delete,
+            .btn-approve,
+            .btn-reject,
+            .btn-secondary {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .admin-container,
+            .login-section {
+                margin: 0.5rem;
+                padding: 0.75rem;
+            }
+
+            .admin-header h1 {
+                font-size: 1.3rem;
+            }
+
+            .form-group input,
+            .form-group textarea {
+                font-size: 16px; /* Prevents iOS zoom on focus */
+            }
+
+            .btn-primary,
+            .btn-edit,
+            .btn-delete,
+            .btn-approve,
+            .btn-reject,
+            .btn-secondary {
+                width: 100%;
+                margin-left: 0;
+                margin-bottom: 0.5rem;
+            }
+
+            .photo-preview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
     </style>
 </head>
 <body>
