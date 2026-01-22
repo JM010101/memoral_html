@@ -62,6 +62,30 @@ function showErrorMessage(message) {
 }
 
 // Initialize page based on current location
+// Dropdown menu functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const dropdowns = document.querySelectorAll('.dropdown');
+    
+    dropdowns.forEach(dropdown => {
+        const link = dropdown.querySelector('a');
+        
+        // Toggle dropdown on click (mobile-friendly)
+        link.addEventListener('click', function(e) {
+            if (window.innerWidth <= 768) {
+                e.preventDefault();
+                dropdown.classList.toggle('active');
+            }
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!dropdown.contains(e.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+    });
+});
+
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         initSupabase();
