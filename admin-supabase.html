@@ -634,6 +634,8 @@
             `).join('');
         }
 
+        let filesQueue = [];
+
         function handlePhotoUpload(event) {
             const files = Array.from(event.target.files);
             
@@ -642,36 +644,23 @@
                 return;
             }
 
-            // Process files one at a time to show cropper for each
-            processFileUpload(files, 0);
+            filesQueue = files.filter(file => {
+                if (file.size > 5 * 1024 * 1024) {
+                    showMessage('Image too large: ' + file.name, 'error');
+                    return false;
+                }
+                return true;
+            });
+
+            if (filesQueue.length > 0) {
+                processNextFile();
+            }
         }
 
-        function processFileUpload(files, index) {
-            if (index >= files.length) return;
-
-            const file = files[index];
-            if (file.size > 5 * 1024 * 1024) {
-                showMessage('Image too large: ' + file.name, 'error');
-                processFileUpload(files, index + 1);
-                return;
-            }
-
-            // Show cropper modal for each image
+        function processNextFile() {
+            if (filesQueue.length === 0) return;
+            const file = filesQueue.shift();
             showCropperModal(file);
-            
-            // After cropping is done, process next file
-            const originalApplyCrop = window.applyCrop;
-            const originalSkipCrop = window.skipCrop;
-            
-            window.applyCrop = function() {
-                originalApplyCrop();
-                processFileUpload(files, index + 1);
-            };
-            
-            window.skipCrop = function() {
-                originalSkipCrop();
-                processFileUpload(files, index + 1);
-            };
         }
 
         function displayPhotos() {
@@ -1426,6 +1415,7 @@
                     });
                     displayPhotos();
                     closeCropperModal();
+                    processNextFile();
                 };
                 reader.readAsDataURL(blob);
             }, 'image/jpeg', 0.9);
@@ -1442,6 +1432,7 @@
                 });
                 displayPhotos();
                 closeCropperModal();
+                processNextFile();
             };
             reader.readAsDataURL(currentFileToCrop);
         }
