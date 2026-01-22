@@ -113,7 +113,7 @@ body {
     position: absolute;
     top: 100%;
     left: 0;
-    background: white;
+    background: #FFFCD4;
     min-width: 200px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     border-radius: 4px;
@@ -124,6 +124,7 @@ body {
     z-index: 1000;
     margin-top: 0.5rem;
     padding: 0.5rem 0;
+    border: 1px solid rgba(3, 19, 252, 0.2);
 }
 
 .dropdown:hover .dropdown-menu,
@@ -146,7 +147,7 @@ body {
 }
 
 .dropdown-menu a:hover {
-    background-color: rgba(3, 19, 252, 0.1);
+    background-color: rgba(3, 19, 252, 0.15);
     color: var(--primary-color);
     opacity: 1;
 }
@@ -883,19 +884,20 @@ footer {
         visibility: visible;
         transform: none;
         box-shadow: none;
-        background: rgba(3, 19, 252, 0.95);
+        background: #FFFCD4;
         margin-top: 0.5rem;
         border-radius: 4px;
+        border: 1px solid rgba(3, 19, 252, 0.2);
     }
 
     .dropdown-menu a {
-        color: white;
+        color: var(--text-dark);
         padding: 0.5rem 1rem;
     }
 
     .dropdown-menu a:hover {
-        background-color: rgba(255, 255, 255, 0.2);
-        color: white;
+        background-color: rgba(3, 19, 252, 0.15);
+        color: var(--primary-color);
     }
 
     .logo {
