@@ -111,6 +111,75 @@
         .set-primary-btn:hover {
             background: rgba(3, 19, 252, 1);
         }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .submission-container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+
+            .submission-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .info-box {
+                padding: 1rem;
+            }
+
+            .photo-preview-item {
+                margin: 0.25rem;
+            }
+
+            .photo-preview-item img {
+                max-width: 120px;
+                max-height: 120px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .submission-container {
+                margin: 0.5rem;
+                padding: 1rem;
+            }
+
+            .submission-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .submission-header p {
+                font-size: 0.95rem;
+            }
+
+            .info-box {
+                padding: 0.75rem;
+                margin: 1rem 0;
+            }
+
+            .info-box ul {
+                margin-left: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .photo-preview-item img {
+                max-width: 90px;
+                max-height: 90px;
+            }
+
+            input[type="text"],
+            input[type="email"],
+            input[type="number"],
+            input[type="file"],
+            textarea {
+                font-size: 16px !important; /* Prevents iOS zoom on focus */
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                padding: 0.75rem 1rem;
+                font-size: 0.95rem;
+            }
+        }
     </style>
 </head>
 <body>
