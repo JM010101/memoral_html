@@ -42,7 +42,7 @@
             <div class="container">
                 <div class="search-box">
                     <input type="text" id="searchInput" placeholder="Search by last name..." aria-label="Search memorials by last name" style="flex: 2;">
-                    <input type="number" id="yearInput" placeholder="Grade 12 Grad Year (e.g., 1982)" aria-label="Filter by Grade 12 graduating year" min="1950" max="2050" style="flex: 1;">
+                    <input type="text" id="yearInput" placeholder="Grade 12 Grad Year (e.g., 1982)" aria-label="Filter by Grade 12 graduating year" inputmode="numeric" pattern="[0-9]*" maxlength="4" style="flex: 1;">
                     <button id="searchButton" aria-label="Search">Search</button>
                     <button id="clearButton" class="btn-secondary" aria-label="Clear search">Clear</button>
                 </div>
