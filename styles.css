@@ -100,8 +100,7 @@ body {
 }
 
 .hero-home {
-    background: linear-gradient(135deg, rgba(74, 85, 104, 0.4) 0%, rgba(90, 108, 125, 0.4) 100%),
-                url('images/home_hero.jpg');
+    background: var(--primary-color);
     background-size: cover;
     background-position: center;
 }
