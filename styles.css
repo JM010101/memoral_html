@@ -1166,6 +1166,20 @@ a:focus {
     text-align: center;
 }
 
+/* Founders Grid Responsive */
+@media (max-width: 768px) {
+    .founders-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+        gap: 0.75rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .founders-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
 /* Print Styles */
 @media print {
     .navbar,
