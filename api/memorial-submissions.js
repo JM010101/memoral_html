@@ -126,7 +126,11 @@ async function handlePublicSubmission(req, res) {
 
         if (error) {
             console.error('Database error:', error);
-            throw new Error('Failed to save memorial');
+            // Return more detailed error message
+            return res.status(400).json({ 
+                error: `Failed to save memorial: ${error.message || error}`,
+                details: error
+            });
         }
 
         // Send verification email using Gmail SMTP
