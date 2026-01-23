@@ -36,12 +36,13 @@ export default async function handler(req, res) {
             return res.status(200).json({ success: true, memorial: data });
         }
 
-        // Get pending comments (both pending_verification and pending)
+        // Get pending comments (only email-verified ones awaiting admin approval)
         if (type === 'comments') {
             const { data, error } = await supabase
                 .from('comments')
                 .select('*')
-                .in('status', ['pending_verification', 'pending'])
+                .eq('status', 'pending')
+                .eq('email_verified', true) // Only show email-verified comments
                 .order('created_at', { ascending: false });
 
             if (error) throw error;
