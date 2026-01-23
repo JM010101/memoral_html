@@ -589,7 +589,8 @@
                 }
 
                 const allMemorials = result.memorials || [];
-                const pending = allMemorials.filter(m => m.status === 'pending');
+                // Only show email-verified pending submissions
+                const pending = allMemorials.filter(m => m.status === 'pending' && m.email_verified === true);
                 const approved = allMemorials.filter(m => m.status === 'approved');
                 
                 displayPendingSubmissions(pending);

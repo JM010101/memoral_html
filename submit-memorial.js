@@ -224,12 +224,13 @@ document.getElementById('submissionForm').addEventListener('submit', async (e) =
             // Show success message
             submitBtn.textContent = '✅ Submitted';
             submitBtn.disabled = true;
+            const message = result.message || 'Memorial submitted successfully!';
             messageDiv.innerHTML = `
                 <div class="success-message" style="padding: 1.5rem; text-align: center; background: #d1fae5; border-radius: 8px;">
                     <h3 style="color: #10b981; margin-bottom: 0.5rem;">✅ Memorial Submitted Successfully!</h3>
                     <p style="margin-bottom: 0.5rem;"><strong>Submission ID:</strong> ${result.memorialId}</p>
-                    <p style="font-size: 0.95rem;">Your memorial will be reviewed and published within 24-48 hours.</p>
-                    <p style="font-size: 0.95rem; margin-top: 0.5rem;">You'll receive an email confirmation at <strong>${submissionData.submitterEmail}</strong></p>
+                    <p style="font-size: 0.95rem; margin-bottom: 0.5rem;">${message}</p>
+                    <p style="font-size: 0.95rem; margin-top: 0.5rem;">Please check your email at <strong>${submissionData.submitterEmail}</strong> to verify your submission.</p>
                 </div>
             `;
             
