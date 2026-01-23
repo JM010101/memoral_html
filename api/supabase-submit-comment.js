@@ -83,7 +83,7 @@ export default async function handler(req, res) {
         // Send verification email using Gmail SMTP
         try {
             const siteUrl = process.env.SITE_URL || req.headers.origin || 'https://philip-memoral-html.a-little-better.com';
-            const verificationUrl = `${siteUrl}/api/verify-comment-email?token=${verificationToken}`;
+            const verificationUrl = `${siteUrl}/api/supabase-manage-comments?token=${verificationToken}`;
 
             // Create Gmail transporter
             const transporter = nodemailer.createTransport({
