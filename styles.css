@@ -1166,23 +1166,84 @@ a:focus {
     text-align: center;
 }
 
+/* Founder Cards */
+.founder-card {
+    background: linear-gradient(135deg, #ffffff 0%, #FFFCD4 100%);
+    padding: 1.5rem 1.25rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(3, 19, 252, 0.1);
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-color);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.founder-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #0313fc 0%, rgba(3, 19, 252, 0.3) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.founder-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(3, 19, 252, 0.15), 0 4px 8px rgba(0, 0, 0, 0.08);
+    border-color: rgba(3, 19, 252, 0.3);
+    background: linear-gradient(135deg, #ffffff 0%, #f0f0d0 100%);
+}
+
+.founder-card:hover::before {
+    opacity: 1;
+}
+
+.founder-card:active {
+    transform: translateY(-2px);
+}
+
 /* Founders Grid Responsive */
 @media (max-width: 1024px) {
     .founders-grid {
         grid-template-columns: repeat(3, 1fr) !important;
+        gap: 1.25rem !important;
     }
 }
 
 @media (max-width: 768px) {
     .founders-grid {
         grid-template-columns: repeat(2, 1fr) !important;
-        gap: 0.75rem !important;
+        gap: 1rem !important;
+    }
+    
+    .founder-card {
+        padding: 1.25rem 1rem;
+        font-size: 0.95rem;
+        min-height: 70px;
     }
 }
 
 @media (max-width: 480px) {
     .founders-grid {
         grid-template-columns: 1fr !important;
+        gap: 0.875rem !important;
+    }
+    
+    .founder-card {
+        padding: 1rem 0.875rem;
+        font-size: 0.9rem;
+        min-height: 65px;
     }
 }
 
