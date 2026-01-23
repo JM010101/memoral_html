@@ -34,6 +34,7 @@ async function loadMemorialsData() {
             birthYear: memorial.birth_year,
             deathYear: memorial.death_year,
             grade_12_year: memorial.grade_12_year,
+            is_faculty: memorial.is_faculty || false,
             tribute: memorial.tribute,
             photos: memorial.photos || []
         }));
@@ -441,8 +442,9 @@ function setupSearch() {
     function performSearch() {
         const query = searchInput.value.trim().toLowerCase();
         const year = yearInput ? yearInput.value.trim() : '';
+        const typeFilter = document.getElementById('typeFilter') ? document.getElementById('typeFilter').value : 'all';
         
-        if (query === '' && year === '') {
+        if (query === '' && year === '' && typeFilter === 'all') {
             loadAllMemorials();
             if (searchResults) searchResults.textContent = '';
             return;
@@ -451,6 +453,7 @@ function setupSearch() {
         const filtered = memorialsData.filter(memorial => {
             let nameMatch = true;
             let yearMatch = true;
+            let typeMatch = true;
 
             // Filter by LAST NAME ONLY if query is provided
             if (query !== '') {
@@ -468,7 +471,14 @@ function setupSearch() {
                 yearMatch = memorial.grade_12_year && memorial.grade_12_year === searchYear;
             }
 
-            return nameMatch && yearMatch;
+            // Filter by type (student/faculty)
+            if (typeFilter === 'student') {
+                typeMatch = memorial.is_faculty === false;
+            } else if (typeFilter === 'faculty') {
+                typeMatch = memorial.is_faculty === true;
+            }
+
+            return nameMatch && yearMatch && typeMatch;
         });
 
         loadAllMemorials(filtered);
@@ -480,6 +490,8 @@ function setupSearch() {
                 const filters = [];
                 if (query) filters.push(`last name: "${query}"`);
                 if (year) filters.push(`Grade 12: ${year}`);
+                if (typeFilter === 'student') filters.push('Students');
+                if (typeFilter === 'faculty') filters.push('Faculty/Staff');
                 const filterText = filters.length > 0 ? ` (${filters.join(', ')})` : '';
                 searchResults.textContent = `Found ${filtered.length} memorial${filtered.length === 1 ? '' : 's'}${filterText}`;
             }
@@ -487,14 +499,21 @@ function setupSearch() {
     }
 
     searchInput.addEventListener('input', performSearch);
+    
     if (yearInput) {
         yearInput.addEventListener('input', performSearch);
+    }
+    
+    const typeFilterEl = document.getElementById('typeFilter');
+    if (typeFilterEl) {
+        typeFilterEl.addEventListener('change', performSearch);
     }
 
     if (clearButton) {
         clearButton.addEventListener('click', () => {
             searchInput.value = '';
             if (yearInput) yearInput.value = '';
+            if (typeFilterEl) typeFilterEl.value = 'all';
             performSearch();
             searchInput.focus();
         });

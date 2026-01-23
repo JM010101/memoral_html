@@ -54,7 +54,7 @@
             <div class="page-header-overlay"></div>
             <div class="container">
                 <h1>All Memorials</h1>
-                <p class="page-subtitle">Search by last name OR Grade 12 Grad Year</p>
+                <p class="page-subtitle">Search by last name, Grade 12 Grad Year, or filter by Student/Faculty</p>
             </div>
         </section>
 
@@ -63,6 +63,11 @@
                 <div class="search-box">
                     <input type="text" id="searchInput" placeholder="Search by last name..." aria-label="Search memorials by last name" style="flex: 2;">
                     <input type="text" id="yearInput" placeholder="Grade 12 Grad Year (e.g., 1982)" aria-label="Filter by Grade 12 graduating year" inputmode="numeric" pattern="[0-9]*" maxlength="4" style="flex: 1;">
+                    <select id="typeFilter" aria-label="Filter by type" style="flex: 1; padding: 0.75rem 1rem; font-size: 1rem; border: 1px solid var(--border-color); border-radius: 4px; font-family: inherit; background: white; cursor: pointer;">
+                        <option value="all">All (Students & Faculty)</option>
+                        <option value="student">Students Only</option>
+                        <option value="faculty">Faculty/Staff Only</option>
+                    </select>
                     <button id="searchButton" aria-label="Search">Search</button>
                     <button id="clearButton" class="btn-secondary" aria-label="Clear search">Clear</button>
                 </div>
