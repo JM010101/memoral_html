@@ -894,6 +894,13 @@
 
             container.innerHTML = comments.map(comment => {
                 const date = new Date(comment.created_at);
+                const isVerified = comment.email_verified === true;
+                const isPendingVerification = comment.status === 'pending_verification';
+                const verificationBadge = isPendingVerification 
+                    ? '<span style="background: #fbbf24; color: #78350f; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem; margin-left: 0.5rem;">⏳ Awaiting Email Verification</span>'
+                    : isVerified 
+                    ? '<span style="background: #10b981; color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem; margin-left: 0.5rem;">✓ Email Verified</span>'
+                    : '';
                 const formattedDate = date.toLocaleString('en-US', { 
                     year: 'numeric', 
                     month: 'short', 
@@ -905,7 +912,7 @@
                 return `
                     <div class="comment-item-admin">
                         <div style="margin-bottom: 1rem;">
-                            <strong style="color: var(--primary-color);">${escapeHtml(comment.name)}</strong><br>
+                            <strong style="color: var(--primary-color);">${escapeHtml(comment.name)}</strong>${verificationBadge}<br>
                             <small>Memorial: ${comment.memorial_id} • ${formattedDate}</small>
                             ${comment.email ? `<br><small>Email: ${escapeHtml(comment.email)}</small>` : ''}
                         </div>

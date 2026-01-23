@@ -36,12 +36,12 @@ export default async function handler(req, res) {
             return res.status(200).json({ success: true, memorial: data });
         }
 
-        // Get pending comments
+        // Get pending comments (both pending_verification and pending)
         if (type === 'comments') {
             const { data, error } = await supabase
                 .from('comments')
                 .select('*')
-                .eq('status', 'pending')
+                .in('status', ['pending_verification', 'pending'])
                 .order('created_at', { ascending: false });
 
             if (error) throw error;

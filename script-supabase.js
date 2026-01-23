@@ -659,7 +659,9 @@ function setupCommentForm(memorialId) {
             const result = await response.json();
 
             if (response.ok) {
-                messageDiv.innerHTML = '<p class="success-message">✅ Thank you! Your comment has been submitted and will appear after approval.</p>';
+                const result = await response.json();
+                const message = result.message || 'Thank you! Your comment has been submitted and will appear after approval.';
+                messageDiv.innerHTML = `<p class="success-message">✅ ${message}</p>`;
                 form.reset();
                 // Reset reCAPTCHA
                 if (recaptchaWidgetId !== null) {
