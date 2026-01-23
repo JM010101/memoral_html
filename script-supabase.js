@@ -659,7 +659,6 @@ function setupCommentForm(memorialId) {
             const result = await response.json();
 
             if (response.ok) {
-                const result = await response.json();
                 const message = result.message || 'Thank you! Your comment has been submitted and will appear after approval.';
                 messageDiv.innerHTML = `<p class="success-message">✅ ${message}</p>`;
                 form.reset();
