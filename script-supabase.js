@@ -322,7 +322,7 @@ function loadMemorialPage() {
     html += '<textarea id="commentText" required maxlength="1000" rows="4"></textarea>';
     html += '</div>';
     html += '<div class="form-group">';
-    html += '<div class="g-recaptcha" data-sitekey="6Le1M1IsAAAAAGqg6pAMi1n-jYt8GznU0lwdW5gJ"></div>';
+    html += '<div id="recaptcha-container" class="g-recaptcha" data-sitekey="6Le1M1IsAAAAAGqg6pAMi1n-jYt8GznU0lwdW5gJ"></div>';
     html += '<small style="color: var(--text-light); margin-top: 0.5rem; display: block;">Please complete the reCAPTCHA to submit your comment</small>';
     html += '</div>';
     html += '<button type="submit" class="btn btn-primary">Submit Comment</button>';
@@ -354,6 +354,45 @@ function loadMemorialPage() {
 
     // Setup comment form submission
     setupCommentForm(memorialId);
+    
+    // Render reCAPTCHA widget after form is created
+    renderRecaptcha();
+}
+
+// Render reCAPTCHA widget explicitly
+let recaptchaWidgetId = null;
+
+function renderRecaptcha() {
+    const recaptchaContainer = document.getElementById('recaptcha-container');
+    if (!recaptchaContainer) return;
+    
+    // Check if already rendered
+    if (recaptchaContainer.hasAttribute('data-rendered')) return;
+    
+    // Function to render reCAPTCHA
+    function doRender() {
+        if (typeof grecaptcha !== 'undefined' && grecaptcha.render) {
+            try {
+                recaptchaWidgetId = grecaptcha.render(recaptchaContainer, {
+                    'sitekey': '6Le1M1IsAAAAAGqg6pAMi1n-jYt8GznU0lwdW5gJ'
+                });
+                recaptchaContainer.setAttribute('data-rendered', 'true');
+            } catch (error) {
+                console.error('Error rendering reCAPTCHA:', error);
+                // Retry after a short delay
+                setTimeout(doRender, 500);
+            }
+        } else {
+            // reCAPTCHA script not loaded yet, retry
+            setTimeout(doRender, 100);
+        }
+    }
+    
+    // Set up global callback for when script loads
+    window.renderRecaptchaWhenReady = doRender;
+    
+    // Try to render immediately (in case script already loaded)
+    doRender();
 }
 
 // Setup photo gallery with lightbox
@@ -589,7 +628,12 @@ function setupCommentForm(memorialId) {
         }
 
         // Verify reCAPTCHA
-        const recaptchaResponse = grecaptcha.getResponse();
+        let recaptchaResponse;
+        if (recaptchaWidgetId !== null) {
+            recaptchaResponse = grecaptcha.getResponse(recaptchaWidgetId);
+        } else {
+            recaptchaResponse = grecaptcha.getResponse();
+        }
         if (!recaptchaResponse) {
             messageDiv.innerHTML = '<p class="error-message">Please complete the reCAPTCHA verification.</p>';
             return;
@@ -617,7 +661,12 @@ function setupCommentForm(memorialId) {
             if (response.ok) {
                 messageDiv.innerHTML = '<p class="success-message">✅ Thank you! Your comment has been submitted and will appear after approval.</p>';
                 form.reset();
-                grecaptcha.reset(); // Reset reCAPTCHA
+                // Reset reCAPTCHA
+                if (recaptchaWidgetId !== null) {
+                    grecaptcha.reset(recaptchaWidgetId);
+                } else {
+                    grecaptcha.reset();
+                }
             } else {
                 throw new Error(result.error || 'Failed to submit comment');
             }

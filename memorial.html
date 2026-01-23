@@ -95,7 +95,16 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script>
+        // Callback for reCAPTCHA to render when ready
+        window.onRecaptchaLoad = function() {
+            // This will be called when reCAPTCHA script loads
+            if (window.renderRecaptchaWhenReady) {
+                window.renderRecaptchaWhenReady();
+            }
+        };
+    </script>
+    <script src="https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoad&render=explicit" async defer></script>
     <script src="script-supabase.js"></script>
 </body>
 </html>
