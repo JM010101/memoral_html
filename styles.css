@@ -31,6 +31,30 @@ body {
     font-weight: 400;
 }
 
+/* Launch Banner */
+.launch-banner {
+    background-color: #0313fc;
+    color: white;
+    padding: 0.75rem 0;
+    text-align: center;
+    width: 100%;
+    box-shadow: 0 2px 8px rgba(3,19,252,0.2);
+    z-index: 1000;
+}
+
+.launch-banner .container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--spacing);
+}
+
+.launch-banner p {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
 /* Navigation */
 .navbar {
     background-color: #0313fc;
